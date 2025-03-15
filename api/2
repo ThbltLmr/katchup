@@ -47,7 +47,7 @@ impl ThreadPool {
 struct Worker {
     id: usize,
     thread: JoinHandle<()>,
-    receiver: Arc<Mutex<Receiver<Job>>>,
+    receiver: Receiver<Job>,
 }
 
 impl Worker {
