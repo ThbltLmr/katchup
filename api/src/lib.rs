@@ -6,7 +6,7 @@ use std::{
     thread::{Builder, JoinHandle},
 };
 
-struct Job {}
+pub type Job = Box<dyn FnOnce() + Send + 'static>;
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
@@ -23,6 +23,9 @@ impl ThreadPool {
     where
         F: FnOnce() + Send + 'static,
     {
+        let job = Box::new(f);
+
+        self.sender.send(job).unwrap();
     }
 
     pub fn build(size: usize) -> Result<ThreadPool, PoolCreationError> {
@@ -47,17 +50,20 @@ impl ThreadPool {
 struct Worker {
     id: usize,
     thread: JoinHandle<()>,
-    receiver: Arc<Mutex<Receiver<Job>>>,
 }
 
 impl Worker {
     fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Result<Worker, PoolCreationError> {
-        match Builder::new().spawn(|| {}) {
-            Ok(thread) => Ok(Worker {
-                id,
-                thread,
-                receiver,
-            }),
+        match Builder::new().spawn(move || {
+            loop {
+                let job = receiver.lock().unwrap().recv().unwrap();
+
+                println!("Worker {id} got a job; executing.");
+
+                job();
+            }
+        }) {
+            Ok(thread) => Ok(Worker { id, thread }),
             Err(_) => Err(PoolCreationError::Error),
         }
     }
