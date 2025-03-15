@@ -8,11 +8,13 @@ use std::{
 
 pub type Job = Box<dyn FnOnce() + Send + 'static>;
 
+#[derive(Debug)]
 pub struct ThreadPool {
     workers: Vec<Worker>,
     sender: Sender<Job>,
 }
 
+#[derive(Debug)]
 pub enum PoolCreationError {
     PoolSizeError,
     Error,
@@ -47,6 +49,7 @@ impl ThreadPool {
     }
 }
 
+#[derive(Debug)]
 struct Worker {
     id: usize,
     thread: JoinHandle<()>,
@@ -56,7 +59,11 @@ impl Worker {
     fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Result<Worker, PoolCreationError> {
         match Builder::new().spawn(move || {
             loop {
-                let job = receiver.lock().unwrap().recv().unwrap();
+                let job = receiver
+                    .lock()
+                    .expect("Failed to acquire mutex lock!")
+                    .recv()
+                    .expect("Channel sender has stopped");
 
                 println!("Worker {id} got a job; executing.");
 
