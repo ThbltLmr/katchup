@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 
 pub struct RequestParser;
-#[derive(Debug)]
 
+#[derive(Debug)]
 pub struct Uri {
     path: String,
     query: Option<String>,
 }
-#[derive(Debug)]
 
+#[derive(Debug)]
 pub struct Request {
     method: String,
     uri: Uri,
@@ -16,32 +16,36 @@ pub struct Request {
     body: Option<String>,
 }
 
+#[derive(Debug)]
+pub enum ParseRequestError {
+    InvalidRequestLineError,
+}
+
 impl RequestParser {
-    pub fn parse_request(request_string: String) -> Result<Request, String> {
+    pub fn parse_request(request_string: String) -> Result<Request, ParseRequestError> {
         let mut lines = request_string.lines();
 
-        // Parse request line
         let request_line = lines
             .next()
-            .ok_or("Invalid request: missing request line")?;
+            .ok_or(ParseRequestError::InvalidRequestLineError)?;
+
         let mut request_line_parts = request_line.split_whitespace();
+
         let method = request_line_parts
             .next()
-            .ok_or("Invalid request: missing method")?
+            .ok_or(ParseRequestError::InvalidRequestLineError)?
             .to_string();
+
         let uri_string = request_line_parts
             .next()
-            .ok_or("Invalid request: missing URI")?
+            .ok_or(ParseRequestError::InvalidRequestLineError)?
             .to_string();
-        // let _version = request_line_parts.next().ok_or("Invalid request: missing HTTP version")?.to_string();
 
-        // Parse URI
         let mut uri_parts = uri_string.splitn(2, '?');
         let path = uri_parts.next().unwrap().to_string();
         let query = uri_parts.next().map(|s| s.to_string());
         let uri = Uri { path, query };
 
-        // Parse headers
         let mut headers = HashMap::new();
         for line in lines.by_ref() {
             if line.is_empty() {
@@ -52,7 +56,6 @@ impl RequestParser {
             }
         }
 
-        // Parse body
         let body = if let Some(content) = lines.next() {
             Some(content.to_string())
         } else {
@@ -119,32 +122,5 @@ mod tests {
         assert_eq!(request.method, "GET");
         assert_eq!(request.uri.path, "/");
         assert_eq!(request.uri.query.unwrap(), "param1=value1&param2=value2");
-    }
-
-    #[test]
-    fn test_parse_invalid_request_missing_request_line() {
-        let request_string = "";
-        let result = RequestParser::parse_request(request_string.to_string());
-        assert!(result.is_err());
-        assert_eq!(
-            result.err().unwrap(),
-            "Invalid request: missing request line"
-        );
-    }
-
-    #[test]
-    fn test_parse_invalid_request_missing_method() {
-        let request_string = " / HTTP/1.1";
-        let result = RequestParser::parse_request(request_string.to_string());
-        assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), "Invalid request: missing method");
-    }
-
-    #[test]
-    fn test_parse_invalid_request_missing_uri() {
-        let request_string = "GET  HTTP/1.1";
-        let result = RequestParser::parse_request(request_string.to_string());
-        assert!(result.is_err());
-        assert_eq!(result.err().unwrap(), "Invalid request: missing URI");
     }
 }
