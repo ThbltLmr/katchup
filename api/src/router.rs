@@ -1,6 +1,6 @@
-pub enum Route {
-    Search(&str),
-    Summary(&str),
+pub enum Route<'a> {
+    Search(&'a str),
+    Summary(&'a str),
 }
 
 pub fn get_route(uri: &str) -> Option<Route> {
@@ -10,3 +10,4 @@ pub fn get_route(uri: &str) -> Option<Route> {
         _ => None,
     }
 }
+
