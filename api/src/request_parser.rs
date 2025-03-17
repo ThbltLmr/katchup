@@ -4,8 +4,8 @@ pub struct RequestParser;
 
 #[derive(Debug)]
 pub struct Uri {
-    path: String,
-    query: Option<String>,
+    pub path: String,
+    pub query: Option<String>,
 }
 
 #[derive(Debug)]

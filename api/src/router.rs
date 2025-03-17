@@ -1,13 +1,14 @@
-pub enum Route<'a> {
-    Search(&'a str),
-    Summary(&'a str),
+use crate::request_parser::Uri;
+
+pub enum Route {
+    Search(String),
+    Summary(String),
 }
 
-pub fn get_route(uri: &str) -> Option<Route> {
-    match uri.split_once("?") {
-        Some(("search", query)) => Some(Route::Search(query)),
-        Some(("summary", query)) => Some(Route::Summary(query)),
+pub fn get_route(uri: Uri) -> Option<Route> {
+    match uri.path.as_str() {
+        "search" => Some(Route::Search(uri.query.unwrap_or(String::from("")))),
+        "summary" => Some(Route::Summary(uri.query.unwrap_or(String::from("")))),
         _ => None,
     }
 }
-
