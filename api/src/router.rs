@@ -5,10 +5,12 @@ pub enum Route {
     Summary(String),
 }
 
-pub fn get_route(uri: Uri) -> Option<Route> {
+pub fn get_route(uri: &Uri) -> Option<Route> {
     match uri.path.as_str() {
-        "search" => Some(Route::Search(uri.query.unwrap_or(String::from("")))),
-        "summary" => Some(Route::Summary(uri.query.unwrap_or(String::from("")))),
+        "/search" => Some(Route::Search(uri.query.clone().unwrap_or(String::from("")))),
+        "/summary" => Some(Route::Summary(
+            uri.query.clone().unwrap_or(String::from("")),
+        )),
         _ => None,
     }
 }

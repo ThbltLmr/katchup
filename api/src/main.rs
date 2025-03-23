@@ -2,6 +2,9 @@ mod request_parser;
 mod router;
 mod thread_pool;
 
+use request_parser::RequestParser;
+use router::get_route;
+use std::io;
 use thread_pool::ThreadPool;
 
 use std::{
@@ -16,52 +19,72 @@ const LOCALHOST: &str = "127.0.0.1";
 enum HandleRequestError {
     InvalidRequestLineError,
     MethodNotAllowedError,
+    UnknownRouteError,
+    IoError(io::Error),
 }
 
 impl std::fmt::Display for HandleRequestError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::InvalidRequestLineError => write!(f, "Invalid Request Line Error"),
-            Self::MethodNotAllowedError => write!(f, "Method Not Allowed Error"),
+            Self::InvalidRequestLineError => write!(f, "Invalid request line"),
+            Self::MethodNotAllowedError => write!(f, "Method not allowed"),
+            Self::UnknownRouteError => write!(f, "Unknown route"),
+            Self::IoError(error) => write!(f, "io error: {error:?}"),
         }
     }
 }
 
 fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
-    let reader = BufReader::new(&stream);
-    let http_request: Vec<_> = reader
-        .lines()
-        .map(|result| result.unwrap())
-        .take_while(|line| !line.is_empty())
-        .collect();
+    let Ok(http_request) = read_until_empty_line(&mut stream) else {
+        return Err(HandleRequestError::IoError(
+            read_until_empty_line(&mut stream).unwrap_err(),
+        ));
+    };
 
     println!("Request received: {http_request:#?}");
 
-    let request_line = http_request[0].to_string();
-    let (method, url, _version) = parse_request_line(request_line)?;
+    let Ok(request) = RequestParser::parse_request(http_request) else {
+        println!("Could not parse request");
+        return Err(HandleRequestError::InvalidRequestLineError);
+    };
 
-    if method != "GET" {
+    if request.method != "GET" {
+        println!("Invalid method");
         return Err(HandleRequestError::MethodNotAllowedError);
     }
 
-    let response = "HTTP/1.1 200 OK\r\n\r\n";
+    let Some(route) = get_route(&request.uri) else {
+        println!("Invalid method");
+        return Err(HandleRequestError::UnknownRouteError);
+    };
+
+    println!("Route to call: {}", request.uri.path);
+
+    let response = format!(
+        "HTTP/1.1 200 OK\r\n\r\n{}",
+        request.uri.query.unwrap_or("no query params".to_string())
+    );
 
     stream.write_all(response.as_bytes()).unwrap();
     Ok(())
 }
 
-fn parse_request_line(
-    request_line: String,
-) -> Result<(String, String, String), HandleRequestError> {
-    let mut split = request_line.split_whitespace();
-    let (Some(method), Some(url), Some(version), None) =
-        (split.next(), split.next(), split.next(), split.next())
-    else {
-        println!("Unexpected request format");
-        return Err(HandleRequestError::InvalidRequestLineError);
-    };
+pub fn read_until_empty_line(stream: &mut TcpStream) -> io::Result<String> {
+    let reader = BufReader::new(stream);
+    let mut result = String::new();
 
-    Ok((method.to_string(), url.to_string(), version.to_string()))
+    for line in reader.lines() {
+        let line = line?;
+
+        if line.is_empty() {
+            break;
+        }
+
+        result.push_str(&line);
+        result.push('\n');
+    }
+
+    Ok(result)
 }
 
 fn main() {

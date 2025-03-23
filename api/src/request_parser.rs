@@ -10,8 +10,8 @@ pub struct Uri {
 
 #[derive(Debug)]
 pub struct Request {
-    method: String,
-    uri: Uri,
+    pub method: String,
+    pub uri: Uri,
     headers: HashMap<String, String>,
     body: Option<String>,
 }
@@ -115,12 +115,12 @@ mod tests {
 
     #[test]
     fn test_parse_valid_request_with_query_parameter() {
-        let request_string = "GET /?param1=value1&param2=value2 HTTP/1.1";
+        let request_string = "GET /search?param1=value1&param2=value2 HTTP/1.1";
         let result = RequestParser::parse_request(request_string.to_string());
         assert!(result.is_ok());
         let request = result.unwrap();
         assert_eq!(request.method, "GET");
-        assert_eq!(request.uri.path, "/");
+        assert_eq!(request.uri.path, "/search");
         assert_eq!(request.uri.query.unwrap(), "param1=value1&param2=value2");
     }
 }

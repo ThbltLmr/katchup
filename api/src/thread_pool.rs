@@ -65,8 +65,6 @@ impl Worker {
                     .recv()
                     .expect("Channel sender has stopped");
 
-                println!("Worker {id} got a job; executing.");
-
                 job();
             }
         }) {
