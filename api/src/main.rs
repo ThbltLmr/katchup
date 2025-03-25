@@ -1,9 +1,9 @@
 mod request_parser;
 mod router;
 mod thread_pool;
+mod tmdb_adapter;
 
 use request_parser::RequestParser;
-use router::get_route;
 use std::io;
 use thread_pool::ThreadPool;
 
@@ -21,6 +21,7 @@ enum HandleRequestError {
     MethodNotAllowedError,
     UnknownRouteError,
     IoError(io::Error),
+    NetworkError,
 }
 
 impl std::fmt::Display for HandleRequestError {
@@ -30,6 +31,7 @@ impl std::fmt::Display for HandleRequestError {
             Self::MethodNotAllowedError => write!(f, "Method not allowed"),
             Self::UnknownRouteError => write!(f, "Unknown route"),
             Self::IoError(error) => write!(f, "io error: {error:?}"),
+            Self::NetworkError => write!(f, "Could not access external service"),
         }
     }
 }
@@ -48,22 +50,34 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
         return Err(HandleRequestError::InvalidRequestLineError);
     };
 
+    println!("Request parse: {request:#?}");
+
     if request.method != "GET" {
         println!("Invalid method");
         return Err(HandleRequestError::MethodNotAllowedError);
     }
 
-    let Some(route) = get_route(&request.uri) else {
-        println!("Invalid method");
+    let router = router::Router::new();
+    let Some(route) = router.get_route(&request.uri) else {
+        println!("Unknown route");
         return Err(HandleRequestError::UnknownRouteError);
     };
 
     println!("Route to call: {}", request.uri.path);
 
+    let Ok(body) = router.respond(&route) else {
+        println!("Could not access external api");
+        return Err(HandleRequestError::NetworkError);
+    };
+
+    let body_string = serde_json::to_string(&body).unwrap();
     let response = format!(
-        "HTTP/1.1 200 OK\r\n\r\n{}",
-        request.uri.query.unwrap_or("no query params".to_string())
+        "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\n\r\n{}",
+        body_string.len(),
+        body_string
     );
+
+    println!("{response}");
 
     stream.write_all(response.as_bytes()).unwrap();
     Ok(())
