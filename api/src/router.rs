@@ -2,6 +2,7 @@ use crate::{
     request_parser::Uri,
     tmdb_adapter::{SearchResults, ShowDetails, TmdbAdapter},
 };
+use serde::{Deserialize, Serialize};
 use std::error::Error;
 
 pub enum Route {
@@ -10,6 +11,7 @@ pub enum Route {
     Summary(String),
 }
 
+#[derive(Deserialize, Serialize)]
 pub enum RouterResponse {
     SearchResults(SearchResults),
     ShowDetails(ShowDetails),
