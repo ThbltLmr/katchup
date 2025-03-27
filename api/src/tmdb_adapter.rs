@@ -51,8 +51,8 @@ impl TmdbAdapter {
 
     pub fn get_tv_show(&self, query: &str) -> Result<ShowDetails, Box<dyn Error>> {
         let request_url = format!(
-            "https://api.themoviedb.org/3/search/tv/{}",
-            query.split_once('=').expect("Could not find id in query").0
+            "https://api.themoviedb.org/3/tv/{}",
+            query.split_once('=').expect("Could not find id in query").1
         );
 
         let api_token = std::env::var("TMDB_API_TOKEN").unwrap();
