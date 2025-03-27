@@ -2,10 +2,6 @@ use reqwest::{Method, blocking::Client, header::ACCEPT};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
-pub struct TmdbAdapter {
-    client: Client,
-}
-
 #[derive(Deserialize, Debug, Serialize)]
 pub struct TvResult {
     pub id: usize,
@@ -19,9 +15,21 @@ pub struct SearchResults {
 }
 
 #[derive(Deserialize, Serialize)]
+pub struct ShowDetailsSeason {
+    pub id: usize,
+    pub name: String,
+    pub episode_count: usize,
+}
+
+#[derive(Deserialize, Serialize)]
 pub struct ShowDetails {
-    pub number_of_episodes: u8,
-    pub number_of_seasons: u8,
+    pub number_of_episodes: usize,
+    pub number_of_seasons: usize,
+    pub seasons: Vec<ShowDetailsSeason>,
+}
+
+pub struct TmdbAdapter {
+    client: Client,
 }
 
 impl TmdbAdapter {
@@ -67,6 +75,20 @@ impl TmdbAdapter {
 
         println!("TMDB response: {response:#?}");
 
-        Ok(response.json().expect("Could not format json"))
+        let details: ShowDetails = response.json().expect("Could not format json");
+        Ok(self.format_show_seasons(details))
+    }
+
+    fn format_show_seasons(&self, mut details: ShowDetails) -> ShowDetails {
+        let sum_episodes = details
+            .seasons
+            .iter()
+            .fold(0, |sum, season| sum + season.episode_count);
+
+        if sum_episodes > details.number_of_episodes {
+            details.seasons.remove(0);
+        }
+
+        details
     }
 }
