@@ -1,12 +1,30 @@
 use crate::{
     request_parser::Uri,
-    tmdb_adapter::{SearchResults, TmdbAdapter},
+    tmdb_adapter::{SearchResults, ShowDetails, TmdbAdapter},
 };
+use std::error::Error;
 
 pub enum Route {
     GetShow(String),
     SearchShow(String),
     Summary(String),
+}
+
+pub enum RouterResponse {
+    SearchResults(SearchResults),
+    ShowDetails(ShowDetails),
+}
+
+impl From<SearchResults> for RouterResponse {
+    fn from(results: SearchResults) -> Self {
+        RouterResponse::SearchResults(results)
+    }
+}
+
+impl From<ShowDetails> for RouterResponse {
+    fn from(details: ShowDetails) -> Self {
+        RouterResponse::ShowDetails(details)
+    }
 }
 
 pub struct Router {
@@ -35,23 +53,23 @@ impl Router {
         }
     }
 
-    pub fn respond(&self, route: &Route) -> Result<SearchResults, Box<dyn std::error::Error>> {
+    pub fn respond(&self, route: &Route) -> Result<RouterResponse, Box<dyn Error>> {
         match route {
-            Route::GetShow(query) => self.respond_get_show(&query),
-            Route::SearchShow(query) => self.respond_search(&query),
-            Route::Summary(query) => self.respond_summary(&query),
+            Route::GetShow(query) => self.respond_get_show(&query).map(RouterResponse::from),
+            Route::SearchShow(query) => self.respond_search(&query).map(RouterResponse::from),
+            Route::Summary(query) => self.respond_summary(&query).map(RouterResponse::from),
         }
     }
 
-    fn respond_get_show(&self, query: &str) -> Result<SearchResults, Box<dyn std::error::Error>> {
+    fn respond_get_show(&self, query: &str) -> Result<ShowDetails, Box<dyn Error>> {
+        Ok(self.tmdb_adapter.get_tv_show(query)?)
+    }
+
+    fn respond_search(&self, query: &str) -> Result<SearchResults, Box<dyn Error>> {
         Ok(self.tmdb_adapter.search_tv_show(query)?)
     }
 
-    fn respond_search(&self, query: &str) -> Result<SearchResults, Box<dyn std::error::Error>> {
-        Ok(self.tmdb_adapter.search_tv_show(query)?)
-    }
-
-    fn respond_summary(&self, query: &str) -> Result<SearchResults, Box<dyn std::error::Error>> {
+    fn respond_summary(&self, query: &str) -> Result<SearchResults, Box<dyn Error>> {
         Ok(self.tmdb_adapter.search_tv_show(query)?)
     }
 }
