@@ -4,6 +4,7 @@ use crate::{
 };
 
 pub enum Route {
+    GetShow(String),
     SearchShow(String),
     Summary(String),
 }
@@ -21,6 +22,9 @@ impl Router {
 
     pub fn get_route(&self, uri: &Uri) -> Option<Route> {
         match uri.path.as_str() {
+            "/shows" => Some(Route::GetShow(
+                uri.query.clone().unwrap_or(String::from("")),
+            )),
             "/search" => Some(Route::SearchShow(
                 uri.query.clone().unwrap_or(String::from("")),
             )),
@@ -33,9 +37,14 @@ impl Router {
 
     pub fn respond(&self, route: &Route) -> Result<SearchResults, Box<dyn std::error::Error>> {
         match route {
+            Route::GetShow(query) => self.respond_get_show(&query),
             Route::SearchShow(query) => self.respond_search(&query),
             Route::Summary(query) => self.respond_summary(&query),
         }
+    }
+
+    fn respond_get_show(&self, query: &str) -> Result<SearchResults, Box<dyn std::error::Error>> {
+        Ok(self.tmdb_adapter.search_tv_show(query)?)
     }
 
     fn respond_search(&self, query: &str) -> Result<SearchResults, Box<dyn std::error::Error>> {
