@@ -1,16 +1,21 @@
-mod request_parser;
-mod router;
-mod thread_pool;
-mod tmdb_adapter;
+mod server {
+    pub mod request_parser;
+    pub mod router;
+    pub mod thread_pool;
+}
 
-use request_parser::RequestParser;
-use std::io;
-use thread_pool::ThreadPool;
+mod adapters {
+    pub mod tmdb_adapter;
+}
 
 use std::{
     io::{BufReader, prelude::*},
     net::{TcpListener, TcpStream},
 };
+
+use server::thread_pool::ThreadPool;
+use server::{request_parser::RequestParser, router::Router};
+use std::io;
 
 const PORT_NUMBER: &str = "8000";
 const LOCALHOST: &str = "127.0.0.1";
@@ -57,7 +62,7 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
         return Err(HandleRequestError::MethodNotAllowedError);
     }
 
-    let router = router::Router::new();
+    let router = Router::new();
     let Some(route) = router.get_route(&request.uri) else {
         println!("Unknown route");
         return Err(HandleRequestError::UnknownRouteError);

@@ -1,7 +1,8 @@
 use crate::{
-    request_parser::Uri,
-    tmdb_adapter::{SearchResults, ShowDetails, TmdbAdapter},
+    adapters::tmdb_adapter::{SearchResults, ShowDetails, TmdbAdapter},
+    server::request_parser::Uri,
 };
+
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
