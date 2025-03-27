@@ -5,6 +5,7 @@ mod server {
 }
 
 mod adapters {
+    pub mod ollama_adapter;
     pub mod tmdb_adapter;
 }
 
