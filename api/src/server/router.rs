@@ -1,6 +1,6 @@
 use crate::{
     adapters::{
-        ollama_adapter::OllamaAdapter,
+        ollama_adapter::{OllamaAdapter, SummaryResult},
         tmdb_adapter::{SearchResults, ShowDetails, TmdbAdapter},
     },
     server::request_parser::Uri,
@@ -19,6 +19,7 @@ pub enum Route {
 pub enum RouterResponse {
     SearchResults(SearchResults),
     ShowDetails(ShowDetails),
+    SummaryResult(SummaryResult),
 }
 
 impl From<SearchResults> for RouterResponse {
@@ -30,6 +31,12 @@ impl From<SearchResults> for RouterResponse {
 impl From<ShowDetails> for RouterResponse {
     fn from(details: ShowDetails) -> Self {
         RouterResponse::ShowDetails(details)
+    }
+}
+
+impl From<SummaryResult> for RouterResponse {
+    fn from(summary: SummaryResult) -> Self {
+        RouterResponse::SummaryResult(summary)
     }
 }
 
@@ -77,7 +84,7 @@ impl Router {
         Ok(self.tmdb_adapter.search_tv_show(query)?)
     }
 
-    fn respond_summary(&self, query: &str) -> Result<(), Box<dyn Error>> {
+    fn respond_summary(&self, query: &str) -> Result<SummaryResult, Box<dyn Error>> {
         Ok(self.ollama_adapter.summarize_show(query)?)
     }
 }
