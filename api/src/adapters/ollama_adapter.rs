@@ -6,7 +6,7 @@ pub struct OllamaAdapter {
     client: Client,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct SummaryResult {
     pub done: bool,
     pub response: String,
@@ -19,7 +19,7 @@ impl OllamaAdapter {
         }
     }
 
-    pub fn summarize_show(&self, query: &str) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn summarize_show(&self, query: &str) -> Result<SummaryResult, Box<dyn std::error::Error>> {
         let show = query
             .split_once('=')
             .expect("Could not find show name in query")
@@ -35,10 +35,17 @@ impl OllamaAdapter {
             "prompt": prompt
         });
 
-        let response = self.client.post(url).body(body.to_string()).send().unwrap();
+        let response: SummaryResult = self
+            .client
+            .post(url)
+            .body(body.to_string())
+            .send()
+            .unwrap()
+            .json()
+            .unwrap();
 
         println!("{:?}", response);
 
-        Ok(())
+        Ok(response)
     }
 }
