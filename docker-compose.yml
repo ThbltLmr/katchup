@@ -21,6 +21,13 @@ services:
       context: .
       dockerfile: ollama/Dockerfile
     image: katchup-ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     ports: 
       - "127.0.0.1:11434:11434"
     networks:
