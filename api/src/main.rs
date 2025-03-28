@@ -10,7 +10,7 @@ mod adapters {
 }
 
 use std::{
-    io::{BufReader, prelude::*},
+    io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
 };
 
@@ -19,7 +19,7 @@ use server::{request_parser::RequestParser, router::Router};
 use std::io;
 
 const PORT_NUMBER: &str = "8000";
-const LOCALHOST: &str = "127.0.0.1";
+const LOCALHOST: &str = "0.0.0.0";
 
 #[derive(Debug)]
 enum HandleRequestError {
