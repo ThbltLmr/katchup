@@ -1,0 +1,16 @@
+import { useQuery } from "@tanstack/react-query"
+
+const searchShows = async (query: string) => {
+	return fetch(`${import.meta.env.VITE_API_BASE_URL}/search?query=${query}`)
+		.then((res) => res.json());
+};
+
+const useSearchShows = (query: string) =>
+	useQuery({
+		queryKey: ["search", query],
+		queryFn: () => searchShows(query),
+		enabled: !!query,
+	});
+
+export default useSearchShows;
+

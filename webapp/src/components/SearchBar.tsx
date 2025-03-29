@@ -7,6 +7,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import useSearchShows from "@/hooks/useSearchShows";
 
 type ShowResult = {
   name: string;
@@ -15,27 +16,19 @@ type ShowResult = {
 
 function SearchBar() {
   const [open, setOpen] = useState(false);
-  const [shows, setShows] = useState<ShowResult[]>([]);
+  const [search, setSearch] = useState<string>('');
+
+  const { data, isPending, refetch } = useSearchShows(search);
 
   const handleSearch = (value: string) => {
     if (value === '') {
       setOpen(false);
-      setShows([]);
       return;
     }
 
-    setShows([
-      {
-        id: 1,
-        name: 'Game of thrones'
-      },
-      {
-        id: 2,
-        name: 'Peaky'
-      },
-    ]);
-
+    setSearch(value);
     setOpen(true);
+    refetch();
   }
 
   return (
@@ -43,9 +36,9 @@ function SearchBar() {
       <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} />
       <CommandList hidden={!open}>
         <CommandEmpty>No results found.</CommandEmpty>
-        {!!shows.length &&
+        {!!data?.SearchResults.results.length && !isPending &&
           <CommandGroup heading="Search results">
-            {shows.map((show) => <CommandItem key={show.id}>{show.name}</CommandItem>)}
+            {data.SearchResults.results.map((show) => <CommandItem key={show.id}>{show.name}</CommandItem>)}
           </CommandGroup>
         }
       </CommandList>
