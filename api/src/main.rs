@@ -78,7 +78,7 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
 
     let body_string = serde_json::to_string(&body).unwrap();
     let response = format!(
-        "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\n\r\n{}",
+        "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n{}",
         body_string.len(),
         body_string
     );
