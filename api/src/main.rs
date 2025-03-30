@@ -1,6 +1,7 @@
 mod server {
     pub mod request_parser;
     pub mod router;
+    pub mod server;
     pub mod thread_pool;
 }
 
