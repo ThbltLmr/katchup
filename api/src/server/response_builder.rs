@@ -35,6 +35,7 @@ impl HttpResponseBuilder {
         map.insert(200, "OK".to_string());
         map.insert(400, "Bad Request".to_string());
         map.insert(404, "Not Found".to_string());
+        map.insert(429, "Method not allowed".to_string());
         map.insert(500, "Internal Server Error".to_string());
         map.insert(503, "Service Unavailable".to_string());
         map

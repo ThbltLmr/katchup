@@ -15,7 +15,10 @@ use std::{
     net::{TcpListener, TcpStream},
 };
 
-use server::{request_parser::RequestParser, router::Router};
+use server::{
+    request_parser::RequestParser,
+    router::{Router, RouterResponse},
+};
 use server::{response_builder::HttpResponseBuilder, thread_pool::ThreadPool};
 use std::io;
 
@@ -37,14 +40,20 @@ impl std::fmt::Display for HandleRequestError {
             Self::InvalidRequestLineError => write!(f, "Invalid request line"),
             Self::MethodNotAllowedError => write!(f, "Method not allowed"),
             Self::UnknownRouteError => write!(f, "Unknown route"),
-            Self::IoError(error) => write!(f, "io error: {error:?}"),
+            Self::IoError(error) => write!(f, "IO error: {error:?}"),
             Self::NetworkError => write!(f, "Could not access external service"),
         }
     }
 }
 
 fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
+    let response_builder = HttpResponseBuilder::new();
+    let router = Router::new();
+
     let Ok(http_request) = read_until_empty_line(&mut stream) else {
+        let response = response_builder.build_or_default_to_500(400, RouterResponse::None);
+        stream.write_all(response.format_string.as_bytes()).unwrap();
+
         return Err(HandleRequestError::IoError(
             read_until_empty_line(&mut stream).unwrap_err(),
         ));
@@ -53,6 +62,9 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
     println!("Request received: {http_request:#?}");
 
     let Ok(request) = RequestParser::parse_request(http_request) else {
+        let response = response_builder.build_or_default_to_500(400, RouterResponse::None);
+        stream.write_all(response.format_string.as_bytes()).unwrap();
+
         println!("Could not parse request");
         return Err(HandleRequestError::InvalidRequestLineError);
     };
@@ -60,12 +72,17 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
     println!("Request parse: {request:#?}");
 
     if request.method != "GET" {
+        let response = response_builder.build_or_default_to_500(429, RouterResponse::None);
+        stream.write_all(response.format_string.as_bytes()).unwrap();
+
         println!("Invalid method");
         return Err(HandleRequestError::MethodNotAllowedError);
     }
 
-    let router = Router::new();
     let Some(route) = router.get_route(&request.uri) else {
+        let response = response_builder.build_or_default_to_500(404, RouterResponse::None);
+        stream.write_all(response.format_string.as_bytes()).unwrap();
+
         println!("Unknown route");
         return Err(HandleRequestError::UnknownRouteError);
     };
@@ -73,11 +90,12 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
     println!("Route to call: {}", request.uri.path);
 
     let Ok(body) = router.respond(&route) else {
+        let response = response_builder.build_or_default_to_500(503, RouterResponse::None);
+        stream.write_all(response.format_string.as_bytes()).unwrap();
+
         println!("Could not access external api");
         return Err(HandleRequestError::NetworkError);
     };
-
-    let response_builder = HttpResponseBuilder::new();
 
     let response = response_builder.build_or_default_to_500(200, body);
 
