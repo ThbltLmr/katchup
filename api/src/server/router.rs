@@ -15,11 +15,12 @@ pub enum Route {
     Summary(String),
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub enum RouterResponse {
     SearchResults(SearchResults),
     ShowDetails(ShowDetails),
     SummaryResult(SummaryResult),
+    None,
 }
 
 impl From<SearchResults> for RouterResponse {

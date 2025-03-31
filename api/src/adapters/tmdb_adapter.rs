@@ -1,27 +1,27 @@
-use reqwest::{Method, blocking::Client, header::ACCEPT};
+use reqwest::{blocking::Client, header::ACCEPT, Method};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
-#[derive(Deserialize, Debug, Serialize)]
+#[derive(Clone, Deserialize, Debug, Serialize)]
 pub struct TvResult {
     pub id: usize,
     pub name: String,
     pub poster_path: Option<String>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct SearchResults {
     pub results: Vec<TvResult>,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct ShowDetailsSeason {
     pub id: usize,
     pub name: String,
     pub episode_count: usize,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct ShowDetails {
     pub number_of_episodes: usize,
     pub number_of_seasons: usize,

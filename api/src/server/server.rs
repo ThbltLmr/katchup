@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 
-struct HttpResponse {
+use super::router::RouterResponse;
+
+pub struct HttpResponse {
     pub code: (u16, String),
-    pub body: String,
+    pub body: RouterResponse,
     pub format_string: String,
 }
 
@@ -16,7 +18,7 @@ impl HttpResponseBuilder {
         HttpResponseBuilder { http_code_map }
     }
 
-    pub fn build_or_default_to_500(&self, code: u16, body: String) -> HttpResponse {
+    pub fn build_or_default_to_500(&self, code: u16, body: RouterResponse) -> HttpResponse {
         match self.http_code_map.get(&code) {
             Some(message) => HttpResponse {
                 code: (code, message.clone()),
@@ -38,7 +40,7 @@ impl HttpResponseBuilder {
         map
     }
 
-    fn format_response(&self, code: (u16, &str), body: String) -> String {
+    fn format_response(&self, code: (u16, &str), body: RouterResponse) -> String {
         match serde_json::to_string(&body) {
             Ok(formatted_body) => {
                 format!(
@@ -60,8 +62,8 @@ impl HttpResponseBuilder {
 
         HttpResponse {
             code: (code, message.clone()),
-            body: body.clone(),
-            format_string: self.format_response((code, &message), body),
+            body: RouterResponse::None,
+            format_string: self.format_response((code, &message), RouterResponse::None),
         }
     }
 }

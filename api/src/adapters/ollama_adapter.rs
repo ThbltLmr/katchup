@@ -6,7 +6,7 @@ pub struct OllamaAdapter {
     client: Client,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SummaryResult {
     pub done: bool,
     pub response: String,
