@@ -4,10 +4,12 @@ import { ModeToggle } from './components/providers/ModeToggle'
 import { ThemeProvider } from './components/providers/ThemeProvider'
 import SearchBar from './components/SearchBar'
 import { useState } from 'react'
+import SeasonAndEpisodeDropdown from './components/SeasonAndEpisodeDropDown'
 
 function App() {
   const queryClient = new QueryClient()
   const [selectedShowId, setSelectedShowId] = useState(0);
+  console.log(selectedShowId);
 
   return (
     <>
@@ -15,6 +17,9 @@ function App() {
         <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
           <ModeToggle />
           <SearchBar setSelectedShowId={setSelectedShowId} />
+          {selectedShowId > 0 &&
+            <SeasonAndEpisodeDropdown showId={selectedShowId} />
+          }
         </ThemeProvider>
       </QueryClientProvider>
     </>

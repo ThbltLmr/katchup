@@ -14,12 +14,12 @@ type GetShowDto = {
 	}
 }
 
-const getShow = async (query: string): Promise<GetShowDto> => {
+const getShow = async (query: number): Promise<GetShowDto> => {
 	return fetch(`${import.meta.env.VITE_API_BASE_URL}/shows?query=${query}`)
 		.then((res) => res.json());
 };
 
-const useGetShow = (query: string) =>
+const useGetShow = (query: number) =>
 	useQuery({
 		queryKey: ["shows", query],
 		queryFn: () => getShow(query),
