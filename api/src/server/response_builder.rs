@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use super::router::RouterResponse;
 
 pub struct HttpResponse {
-    pub code: (u16, String),
-    pub body: RouterResponse,
+    code: (u16, String),
+    body: RouterResponse,
     pub format_string: String,
 }
 
@@ -58,7 +58,6 @@ impl HttpResponseBuilder {
     fn build_500(&self) -> HttpResponse {
         let code: u16 = 500;
         let message: String = self.http_code_map.get(&code).unwrap().to_string();
-        let body = "".to_string();
 
         HttpResponse {
             code: (code, message.clone()),
