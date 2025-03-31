@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/command"
 import useSearchShows from "@/hooks/useSearchShows";
 
-function SearchBar() {
+function SearchBar({ setSelectedShowId }: { setSelectedShowId: React.Dispatch<React.SetStateAction<number>> }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>('');
 
@@ -33,7 +33,7 @@ function SearchBar() {
         <CommandEmpty>No results found.</CommandEmpty>
         {!!data?.SearchResults.results.length && !isPending &&
           <CommandGroup heading="Search results">
-            {data.SearchResults.results.map((show) => <CommandItem key={show.id}>{show.name}</CommandItem>)}
+            {data.SearchResults.results.map((show) => <CommandItem key={show.id} onClick={() => setSelectedShowId(show.id)}>{show.name}</CommandItem>)}
           </CommandGroup>
         }
       </CommandList>
