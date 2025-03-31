@@ -67,3 +67,19 @@ impl HttpResponseBuilder {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_build_500() {
+        let response_builder = HttpResponseBuilder::new();
+
+        let response = response_builder.build_500();
+
+        assert_eq!(response.code.0, 500);
+        assert_eq!(response.code.1, "Internal Server Error");
+        assert_eq!(response.format_string, "HTTP/1.1 500 Internal Server Error\r\ncontent-type: application/json\r\ncontent-length: 6\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n\"None\"");
+    }
+}
