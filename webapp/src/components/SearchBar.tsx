@@ -9,11 +9,6 @@ import {
 } from "@/components/ui/command"
 import useSearchShows from "@/hooks/useSearchShows";
 
-type ShowResult = {
-  name: string;
-  id: number;
-}
-
 function SearchBar() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>('');
