@@ -1,7 +1,7 @@
 mod server {
     pub mod request_parser;
+    pub mod response_builder;
     pub mod router;
-    pub mod server;
     pub mod thread_pool;
 }
 
@@ -16,7 +16,7 @@ use std::{
 };
 
 use server::{request_parser::RequestParser, router::Router};
-use server::{server::HttpResponseBuilder, thread_pool::ThreadPool};
+use server::{response_builder::HttpResponseBuilder, thread_pool::ThreadPool};
 use std::io;
 
 const PORT_NUMBER: &str = "8000";
