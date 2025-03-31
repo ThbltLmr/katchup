@@ -26,6 +26,11 @@ function SearchBar({ setSelectedShowId }: { setSelectedShowId: React.Dispatch<Re
     refetch();
   }
 
+  const handleShowSelect = (value: number) => {
+    setSelectedShowId(value);
+    setOpen(false);
+  }
+
   return (
     <Command>
       <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} />
@@ -33,7 +38,7 @@ function SearchBar({ setSelectedShowId }: { setSelectedShowId: React.Dispatch<Re
         <CommandEmpty>No results found.</CommandEmpty>
         {!!data?.SearchResults.results.length && !isPending &&
           <CommandGroup heading="Search results">
-            {data.SearchResults.results.map((show) => <CommandItem key={show.id} onSelect={() => setSelectedShowId(show.id)}>{show.name}</CommandItem>)}
+            {data.SearchResults.results.map((show) => <CommandItem key={show.id} onSelect={() => handleShowSelect(show.id)}>{show.name}</CommandItem>)}
           </CommandGroup>
         }
       </CommandList>

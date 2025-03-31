@@ -26,5 +26,5 @@ const useGetShow = (query: number) =>
 		enabled: !!query,
 	});
 
-export default useGetShow;
+export { useGetShow, type SeasonResult };
 
