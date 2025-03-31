@@ -30,12 +30,17 @@ impl HttpResponseBuilder {
     }
 
     fn format_response(&self, response: HttpResponse) -> String {
-        format!(
-        "HTTP/1.1 {} {}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n{}",
-            response.code.0,
-            response.code.1,
-        serde_json::to_string(response.body)response.body.len(),
-        response.body
-        )
+        match serde_json::to_string(&response.body) {
+            Ok(formatted_body) => {
+                format!(
+                    "HTTP/1.1 {} {}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n{}",
+                    response.code.0,
+                    response.code.1,
+                    formatted_body.len(),
+                    formatted_body,
+                )
+            }
+            Err(_) => "failed to serialize response body".to_string(),
+        }
     }
 }
