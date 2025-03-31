@@ -11,16 +11,20 @@ mod adapters {
 }
 
 use std::{
+    error::Error,
+    fmt,
+    fmt::{Display, Formatter},
+    io,
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
 };
 
 use server::{
     request_parser::RequestParser,
+    response_builder::HttpResponseBuilder,
     router::{Router, RouterResponse},
+    thread_pool::ThreadPool,
 };
-use server::{response_builder::HttpResponseBuilder, thread_pool::ThreadPool};
-use std::io;
 
 const PORT_NUMBER: &str = "8000";
 const LOCALHOST: &str = "0.0.0.0";
@@ -34,8 +38,8 @@ enum HandleRequestError {
     NetworkError,
 }
 
-impl std::fmt::Display for HandleRequestError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl Display for HandleRequestError {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
             Self::InvalidRequestLineError => write!(f, "Invalid request line"),
             Self::MethodNotAllowedError => write!(f, "Method not allowed"),
@@ -45,6 +49,8 @@ impl std::fmt::Display for HandleRequestError {
         }
     }
 }
+
+impl Error for HandleRequestError {}
 
 fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
     let response_builder = HttpResponseBuilder::new();
