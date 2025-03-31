@@ -9,6 +9,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
+#[derive(Debug)]
 pub enum Route {
     GetShow(String),
     SearchShow(String),
@@ -87,5 +88,42 @@ impl Router {
 
     fn respond_summary(&self, query: &str) -> Result<SummaryResult, Box<dyn Error>> {
         Ok(self.ollama_adapter.summarize_show(query)?)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_route() {
+        let router = Router::new();
+        let uri_shows = Uri {
+            path: "/shows".to_string(),
+            query: Some("Test Show".to_string()),
+        };
+        let uri_search = Uri {
+            path: "/search".to_string(),
+            query: Some("Test Show".to_string()),
+        };
+        let uri_summary = Uri {
+            path: "/summary".to_string(),
+            query: Some("Test Show".to_string()),
+        };
+
+        match router.get_route(&uri_shows) {
+            Some(Route::GetShow(query)) => assert_eq!(query, "Test Show"),
+            _ => panic!("Expected GetShow route"),
+        }
+
+        match router.get_route(&uri_search) {
+            Some(Route::SearchShow(query)) => assert_eq!(query, "Test Show"),
+            _ => panic!("Expected SearchShow route"),
+        }
+
+        match router.get_route(&uri_summary) {
+            Some(Route::Summary(query)) => assert_eq!(query, "Test Show"),
+            _ => panic!("Expected Summary route"),
+        }
     }
 }
