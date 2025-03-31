@@ -1,13 +1,12 @@
-use serde_json::Value;
 use std::collections::HashMap;
 
 struct HttpResponse {
     pub code: (u16, String),
-    pub body: Value,
+    pub body: String,
     pub format_string: String,
 }
 
-struct HttpResponseBuilder {
+pub struct HttpResponseBuilder {
     http_code_map: HashMap<u16, String>,
 }
 
@@ -17,7 +16,7 @@ impl HttpResponseBuilder {
         HttpResponseBuilder { http_code_map }
     }
 
-    pub fn build_or_default_to_500(&self, code: u16, body: Value) -> HttpResponse {
+    pub fn build_or_default_to_500(&self, code: u16, body: String) -> HttpResponse {
         match self.http_code_map.get(&code) {
             Some(message) => HttpResponse {
                 code: (code, message.clone()),
@@ -39,7 +38,7 @@ impl HttpResponseBuilder {
         map
     }
 
-    fn format_response(&self, code: (u16, &str), body: Value) -> String {
+    fn format_response(&self, code: (u16, &str), body: String) -> String {
         match serde_json::to_string(&body) {
             Ok(formatted_body) => {
                 format!(
@@ -50,14 +49,14 @@ impl HttpResponseBuilder {
                     formatted_body,
                 )
             }
-            Err(_) => "failed to serialize response body".to_string(),
+            Err(_) => "Failed to serialize response body".to_string(),
         }
     }
 
     fn build_500(&self) -> HttpResponse {
         let code: u16 = 500;
         let message: String = self.http_code_map.get(&code).unwrap().to_string();
-        let body = serde_json::Value::String("".to_string());
+        let body = "".to_string();
 
         HttpResponse {
             code: (code, message.clone()),

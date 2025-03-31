@@ -15,8 +15,8 @@ use std::{
     net::{TcpListener, TcpStream},
 };
 
-use server::thread_pool::ThreadPool;
 use server::{request_parser::RequestParser, router::Router};
+use server::{server::HttpResponseBuilder, thread_pool::ThreadPool};
 use std::io;
 
 const PORT_NUMBER: &str = "8000";
@@ -77,16 +77,11 @@ fn handle_stream(mut stream: TcpStream) -> Result<(), HandleRequestError> {
         return Err(HandleRequestError::NetworkError);
     };
 
-    let body_string = serde_json::to_string(&body).unwrap();
-    let response = format!(
-        "HTTP/1.1 200 OK\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n{}",
-        body_string.len(),
-        body_string
-    );
+    let response_builder = HttpResponseBuilder::new();
 
-    println!("{response}");
+    let response = response_builder.build_or_default_to_500(200, body);
 
-    stream.write_all(response.as_bytes()).unwrap();
+    stream.write_all(response.format_string.as_bytes()).unwrap();
     Ok(())
 }
 
