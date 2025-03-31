@@ -70,6 +70,8 @@ impl HttpResponseBuilder {
 
 #[cfg(test)]
 mod tests {
+    use crate::adapters::tmdb_adapter::{ShowDetails, ShowDetailsSeason};
+
     use super::*;
 
     #[test]
@@ -81,5 +83,26 @@ mod tests {
         assert_eq!(response.code.0, 500);
         assert_eq!(response.code.1, "Internal Server Error");
         assert_eq!(response.format_string, "HTTP/1.1 500 Internal Server Error\r\ncontent-type: application/json\r\ncontent-length: 6\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n\"None\"");
+    }
+
+    #[test]
+    fn test_format_response_success() {
+        let response_builder = HttpResponseBuilder::new();
+        let code = (200, "OK");
+        let body = RouterResponse::ShowDetails(ShowDetails {
+            number_of_episodes: 2,
+            number_of_seasons: 1,
+            seasons: vec![ShowDetailsSeason {
+                id: 2,
+                name: "test".to_string(),
+                episode_count: 3,
+            }],
+        });
+
+        let formatted_response = response_builder.format_response(code, body);
+        assert!(formatted_response.contains("HTTP/1.1 200 OK"));
+        assert!(formatted_response.contains("content-type: application/json"));
+        assert!(formatted_response.contains("content-length"));
+        assert!(formatted_response.contains("OK"));
     }
 }
