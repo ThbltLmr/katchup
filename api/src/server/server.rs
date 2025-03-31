@@ -1,14 +1,41 @@
-struct HttpSuccessCode;
+use serde_json::Value;
+use std::collections::HashMap;
 
-impl HttpSuccessCode {
-    const OK: u16 = 200;
+struct HttpResponse {
+    pub code: (u16, String),
+    pub body: Value,
+    pub format_string: String,
 }
 
-struct HttpErrorCode;
+struct HttpResponseBuilder {
+    http_code_map: HashMap<u16, String>,
+}
 
-impl HttpErrorCode {
-    const BAD_REQUEST: u16 = 400;
-    const NOT_FOUND: u16 = 404;
-    const INTERNAL_SERVER_ERROR: u16 = 500;
-    const SERVICE_UNAVAILABLE: u16 = 503;
+impl HttpResponseBuilder {
+    pub fn new() -> Self {
+        let http_code_map = HttpResponseBuilder::create_http_code();
+        HttpResponseBuilder { http_code_map }
+    }
+
+    pub fn build_or_default_to_500(code: u16, body: Value) -> HttpResponse {}
+
+    fn create_http_code() -> HashMap<u16, String> {
+        let mut map = HashMap::new();
+        map.insert(200, "OK".to_string());
+        map.insert(400, "Bad Request".to_string());
+        map.insert(404, "Not Found".to_string());
+        map.insert(500, "Internal Server Error".to_string());
+        map.insert(503, "Service Unavailable".to_string());
+        map
+    }
+
+    fn format_response(&self, response: HttpResponse) -> String {
+        format!(
+        "HTTP/1.1 {} {}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n{}",
+            response.code.0,
+            response.code.1,
+        serde_json::to_string(response.body)response.body.len(),
+        response.body
+        )
+    }
 }
