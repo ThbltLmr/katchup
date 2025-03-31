@@ -20,11 +20,12 @@ impl HttpResponseBuilder {
     pub fn build_or_default_to_500(&self, code: u16, body: Value) -> HttpResponse {
         match self.http_code_map.get(&code) {
             Some(message) => HttpResponse {
-                code: (code, message),
-                body,
-                format_string: S,
+                code: (code, message.clone()),
+                body: body.clone(),
+                format_string: self.format_response((code, &message), body),
             },
-            None => self.format_response((500, "Internal Server Error"), body),
+
+            None => self.build_500(),
         }
     }
 
