@@ -9,16 +9,18 @@ import {
 } from "@/components/ui/command"
 import useSearchShows from "@/hooks/useSearchShows";
 
-function SearchBar({ setSelectedShowId }: { setSelectedShowId: React.Dispatch<React.SetStateAction<number>> }) {
+function SearchBar({ selectedShowId, setSelectedShowId }: { selectedShowId: number, setSelectedShowId: React.Dispatch<React.SetStateAction<number>> }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>('');
 
   const { data, isPending, refetch } = useSearchShows(search);
+  const shows = data?.SearchResults.results;
 
   const handleSearch = (value: string) => {
+    setSelectedShowId(0);
+
     if (value === '') {
       setOpen(false);
-      setSelectedShowId(0);
       return;
     }
 
@@ -34,10 +36,10 @@ function SearchBar({ setSelectedShowId }: { setSelectedShowId: React.Dispatch<Re
 
   return (
     <Command>
-      <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} />
+      <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} value={shows?.find((show) => show.id === selectedShowId)?.name || undefined} />
       <CommandList hidden={!open}>
         <CommandEmpty>No results found.</CommandEmpty>
-        {!!data?.SearchResults.results.length && !isPending &&
+        {!!shows && !isPending &&
           <CommandGroup heading="Search results">
             {data.SearchResults.results.map((show) => <CommandItem key={show.id} onSelect={() => handleShowSelect(show.id)}>{show.name}</CommandItem>)}
           </CommandGroup>

@@ -16,7 +16,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
           <ModeToggle />
-          <SearchBar setSelectedShowId={setSelectedShowId} />
+          <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} />
           {selectedShowId > 0 &&
             <SeasonAndEpisodeDropdown showId={selectedShowId} />
           }
