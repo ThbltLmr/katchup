@@ -9,7 +9,6 @@ import SeasonAndEpisodeDropdown from './components/SeasonAndEpisodeDropDown'
 function App() {
   const queryClient = new QueryClient()
   const [selectedShowId, setSelectedShowId] = useState(0);
-  console.log(selectedShowId);
 
   return (
     <>
