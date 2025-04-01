@@ -18,6 +18,7 @@ function SearchBar({ setSelectedShowId }: { setSelectedShowId: React.Dispatch<Re
   const handleSearch = (value: string) => {
     if (value === '') {
       setOpen(false);
+      setSelectedShowId(0);
       return;
     }
 
