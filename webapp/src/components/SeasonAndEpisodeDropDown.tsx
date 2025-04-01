@@ -36,7 +36,7 @@ function SeasonAndEpisodeDropdown({ showId }: { showId: number }) {
     <>
       <Command>
         <CommandList>
-          <CommandInput placeholder="Choose a season" />
+          <CommandInput placeholder="Choose a season" value={!!selectedSeason ? `Season ${(seasons.findIndex((season) => season.id === selectedSeason.id)! + 1).toString()}` : undefined} />
           <CommandGroup>
             {seasons.map((season, i) => (
               <CommandItem
@@ -62,7 +62,7 @@ function SeasonAndEpisodeDropdown({ showId }: { showId: number }) {
       {!!selectedSeason &&
         <Command>
           <CommandList>
-            <CommandInput placeholder="Choose an episode" />
+            <CommandInput placeholder="Choose an episode" value={!!selectedEpisode ? `Episode ${selectedEpisode}` : undefined} />
             <CommandGroup>
               {Array.from({ length: selectedSeason.episode_count }, (_, i) => (
                 <CommandItem
