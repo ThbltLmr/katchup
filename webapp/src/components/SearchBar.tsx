@@ -35,13 +35,13 @@ function SearchBar({ selectedShowId, setSelectedShowId }: { selectedShowId: numb
   }
 
   return (
-    <Command className={`m-4 transition-all duration-300 ease-in-out ${selectedShowId > 0 ? 'w-1/2' : 'w-full'}`}>
+    <Command className={`m-4 h-full transition-all duration-300 ease-in-out ${selectedShowId > 0 ? 'w-1/2' : 'w-full'}`}>
       <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} value={shows?.find((show) => show.id === selectedShowId)?.name || undefined} />
       <CommandList hidden={!open}>
         <CommandEmpty>No results found.</CommandEmpty>
         {!!shows && !isPending &&
           <CommandGroup heading="Search results">
-            {data.SearchResults.results.map((show) => <CommandItem key={show.id} onSelect={() => handleShowSelect(show.id)}>{show.name}</CommandItem>)}
+            {shows.map((show) => <CommandItem key={show.id} onSelect={() => handleShowSelect(show.id)}>{show.name}</CommandItem>)}
           </CommandGroup>
         }
       </CommandList>

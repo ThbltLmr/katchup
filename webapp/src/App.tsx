@@ -4,11 +4,15 @@ import { ModeToggle } from './components/providers/ModeToggle'
 import { ThemeProvider } from './components/providers/ThemeProvider'
 import SearchBar from './components/SearchBar'
 import { useState } from 'react'
-import SeasonAndEpisodeDropdown from './components/SeasonAndEpisodeDropDown'
+import SeasonDropdown from './components/SeasonDropdown'
+import EpisodeDropdown from './components/EpisodeDropdown'
+import { SeasonResult } from './hooks/useGetShow'
 
 function App() {
   const queryClient = new QueryClient()
   const [selectedShowId, setSelectedShowId] = useState(0);
+  const [selectedSeason, setSelectedSeason] = useState<SeasonResult | undefined>(undefined);
+  const [selectedEpisode, setSelectedEpisode] = useState<number | undefined>(undefined);
 
   return (
     <>
@@ -24,7 +28,10 @@ function App() {
             <div className='flex transition-all duration-300 ease-in-out'>
               <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} />
               {selectedShowId > 0 &&
-                <SeasonAndEpisodeDropdown showId={selectedShowId} />
+                <SeasonDropdown showId={selectedShowId} setSelectedSeason={setSelectedSeason} season={selectedSeason} />
+              }
+              {!!selectedSeason &&
+                <EpisodeDropdown season={selectedSeason} setSelectedEpisode={setSelectedEpisode} episode={selectedEpisode} />
               }
             </div>
           </div>
