@@ -14,11 +14,20 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
-          <ModeToggle />
-          <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} />
-          {selectedShowId > 0 &&
-            <SeasonAndEpisodeDropdown showId={selectedShowId} />
-          }
+          <div className='mx-auto relative w-full'>
+            <div className='absolute top-0 right-0'>
+              <ModeToggle />
+            </div>
+            <div className='my-8 text-2xl font-semibold'>
+              <h1>Katchup</h1>
+            </div>
+            <div className='flex'>
+              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} />
+              {selectedShowId > 0 &&
+                <SeasonAndEpisodeDropdown showId={selectedShowId} />
+              }
+            </div>
+          </div>
         </ThemeProvider>
       </QueryClientProvider>
     </>
