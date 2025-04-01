@@ -14,6 +14,8 @@ import { useState } from "react";
 function SeasonAndEpisodeDropdown({ showId }: { showId: number }) {
   const [seasonValue, setSeasonValue] = useState("")
   const [episodeValue, setEpisodeValue] = useState("")
+  const [seasonSelectOpen, setSeasonSelectOpen] = useState(true);
+  const [episodeSelectOpen, setEpisodeSelectOpen] = useState(true);
   const [selectedSeason, setSelectedSeason] = useState<SeasonResult | undefined>(undefined);
   const [selectedEpisode, setSelectedEpisode] = useState<number | undefined>(undefined);
 
@@ -24,20 +26,22 @@ function SeasonAndEpisodeDropdown({ showId }: { showId: number }) {
   const handleSelectSeasonValue = (value: number) => {
     setSeasonValue(value.toString());
     setSelectedSeason(seasons.find((season) => season.id === value));
+    setSeasonSelectOpen(false);
   }
 
   const handleSelectEpisodeValue = (value: number) => {
     setEpisodeValue(value.toString());
     setSelectedEpisode(value);
+    setEpisodeSelectOpen(false);
   }
 
 
   return (
     <>
-      <Command>
+      <Command className={`m-4 transition-all duration-300 ease-in-out ${showId > 0 ? !!selectedSeason ? 'w-1/4' : 'w-1/2' : 'w-full'}`}>
         <CommandList>
           <CommandInput placeholder="Choose a season" value={!!selectedSeason ? `Season ${(seasons.findIndex((season) => season.id === selectedSeason.id)! + 1).toString()}` : undefined} />
-          <CommandGroup>
+          <CommandGroup hidden={!seasonSelectOpen}>
             {seasons.map((season, i) => (
               <CommandItem
                 key={season.id}
@@ -60,10 +64,10 @@ function SeasonAndEpisodeDropdown({ showId }: { showId: number }) {
       </Command>
 
       {!!selectedSeason &&
-        <Command>
+        <Command className={`m-4 transition-all duration-300 ease-in-out ${!!selectedSeason ? 'w-1/4' : 'w-1/2'}`}>
           <CommandList>
             <CommandInput placeholder="Choose an episode" value={!!selectedEpisode ? `Episode ${selectedEpisode}` : undefined} />
-            <CommandGroup>
+            <CommandGroup hidden={!episodeSelectOpen}>
               {Array.from({ length: selectedSeason.episode_count }, (_, i) => (
                 <CommandItem
                   key={i}

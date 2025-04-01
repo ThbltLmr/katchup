@@ -35,7 +35,7 @@ function SearchBar({ selectedShowId, setSelectedShowId }: { selectedShowId: numb
   }
 
   return (
-    <Command>
+    <Command className={`m-4 transition-all duration-300 ease-in-out ${selectedShowId > 0 ? 'w-1/2' : 'w-full'}`}>
       <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} value={shows?.find((show) => show.id === selectedShowId)?.name || undefined} />
       <CommandList hidden={!open}>
         <CommandEmpty>No results found.</CommandEmpty>

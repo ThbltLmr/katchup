@@ -21,7 +21,7 @@ function App() {
             <div className='my-8 text-2xl font-semibold'>
               <h1>Katchup</h1>
             </div>
-            <div className='flex'>
+            <div className='flex transition-all duration-300 ease-in-out'>
               <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} />
               {selectedShowId > 0 &&
                 <SeasonAndEpisodeDropdown showId={selectedShowId} />
