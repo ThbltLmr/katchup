@@ -37,9 +37,9 @@ pub struct CastMemberRole {
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct CastMember {
-    pub id: String,
+    pub id: usize,
     pub name: String,
-    pub profile_path: String,
+    pub profile_path: Option<String>,
     pub total_episode_count: usize,
     pub roles: Vec<CastMemberRole>,
 }
