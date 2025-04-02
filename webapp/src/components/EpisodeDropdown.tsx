@@ -1,51 +1,43 @@
-import { Check } from "lucide-react"
-
-import { cn } from "@/lib/utils"
 import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import { SeasonResult } from "@/hooks/useGetShow";
-import { useState } from "react";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-function SeasonAndEpisodeDropdown({ season, episode, setSelectedEpisode }: { season: SeasonResult, episode: number | undefined, setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>> }) {
-  const [episodeValue, setEpisodeValue] = useState("")
+import { SeasonResult } from "@/hooks/useGetShow";
+
+function EpisodeDropdown({ season, setSelectedEpisode }: { season: SeasonResult, setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>> }) {
 
   const handleSelectEpisodeValue = (value: number) => {
-    setEpisodeValue(value.toString());
     setSelectedEpisode(value);
   }
 
 
   return (
-    <Command className={'m-4 h-full transition-all duration-300 ease-in-out w-1/4'}>
-      <CommandList>
-        <CommandInput autoFocus placeholder="Choose an episode" value={!!episode ? `Episode ${episode}` : undefined} />
-        <CommandGroup>
-          {Array.from({ length: season.episode_count }, (_, i) => (
-            <CommandItem
-              key={i}
-              value={(i + 1).toString()}
-              onSelect={(currentValue) => {
-                handleSelectEpisodeValue(currentValue === episodeValue ? 0 : i + 1)
-              }}
-            >
-              <Check
-                className={cn(
-                  "mr-2 h-4 w-4",
-                  episodeValue === i.toString() ? "opacity-100" : "opacity-0"
-                )}
-              />
-              Episode {i + 1}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      </CommandList>
-    </Command>
+    <div className={`m-4 transition-all h-full duration-300 ease-in-out ${!!season ? 'w-1/4' : 'w-1/2'}`}>
+      <Select onValueChange={(currentValue) => {
+        handleSelectEpisodeValue(parseInt(currentValue))
+      }}>
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select a season" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {Array.from({ length: season.episode_count }, (_, i) =>
+              <SelectItem
+                value={(i + 1).toString()}
+              >
+                Episode {i + 1}
+              </SelectItem>
+            )}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div >
   )
 }
 
-export default SeasonAndEpisodeDropdown
+export default EpisodeDropdown

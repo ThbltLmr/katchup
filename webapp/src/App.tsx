@@ -31,7 +31,7 @@ function App() {
                 <SeasonDropdown showId={selectedShowId} setSelectedSeason={setSelectedSeason} season={selectedSeason} />
               }
               {!!selectedSeason &&
-                <EpisodeDropdown season={selectedSeason} setSelectedEpisode={setSelectedEpisode} episode={selectedEpisode} />
+                <EpisodeDropdown season={selectedSeason} setSelectedEpisode={setSelectedEpisode} />
               }
             </div>
           </div>
