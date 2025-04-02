@@ -28,6 +28,27 @@ pub struct ShowDetails {
     pub seasons: Vec<ShowDetailsSeason>,
 }
 
+#[derive(Clone, Deserialize, Serialize)]
+pub struct CastMemberRole {
+    pub credit_id: String,
+    pub episode_count: usize,
+    pub character: String,
+}
+
+#[derive(Clone, Deserialize, Serialize)]
+pub struct CastMember {
+    pub id: String,
+    pub name: String,
+    pub profile_path: String,
+    pub total_episode_count: usize,
+    pub roles: Vec<CastMemberRole>,
+}
+
+#[derive(Clone, Deserialize, Serialize)]
+pub struct CastDetails {
+    cast: Vec<CastMember>,
+}
+
 pub struct TmdbAdapter {
     client: Client,
 }
@@ -90,5 +111,27 @@ impl TmdbAdapter {
         }
 
         details
+    }
+
+    pub fn get_cast(&self, query: &str) -> Result<CastDetails, Box<dyn Error>> {
+        let request_url = format!(
+            "https://api.themoviedb.org/3/tv/{}/aggregate_credits",
+            query.split_once('=').expect("Could not find id in query").1
+        );
+
+        let api_token = std::env::var("TMDB_API_TOKEN").unwrap();
+
+        let builder = self
+            .client
+            .request(Method::GET, request_url)
+            .bearer_auth(api_token)
+            .header(ACCEPT, "application/json");
+
+        let response = builder.send()?;
+
+        println!("TMDB response: {response:#?}");
+
+        let details: CastDetails = response.json().expect("Could not format json");
+        Ok(details)
     }
 }
