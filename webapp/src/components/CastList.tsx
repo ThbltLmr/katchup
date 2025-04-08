@@ -5,7 +5,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { useGetCast } from "@/hooks/useGetCast";
+import useGetTmdbImage, { ProfileSizes } from "@/hooks/useGetTmdbImage";
 
 function CastList({ showId }: { showId: number }) {
   const { data } = useGetCast(showId);
@@ -14,10 +22,23 @@ function CastList({ showId }: { showId: number }) {
 
   return (
     <Carousel>
-      <CarouselContent>
+      <CarouselContent className="p-4">
         {cast.map((actor) =>
-          <CarouselItem key={actor.id} className="basis-1/3">
-            {actor.name}
+          <CarouselItem key={actor.id} className="basis-1/4 w-1/5">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">{actor.roles[0].character}</CardTitle>
+              </CardHeader>
+              <CardContent className="center">
+                {!!actor.profile_path &&
+                  <img className="mx-auto object-scale-down" src={useGetTmdbImage(actor.profile_path, ProfileSizes.w185)} />
+                }
+              </CardContent>
+              <CardFooter>
+                <p className="text-center w-full text-sm">Played by {actor.name}</p>
+              </CardFooter>
+            </Card>
+
           </CarouselItem>
         )}
       </CarouselContent>
