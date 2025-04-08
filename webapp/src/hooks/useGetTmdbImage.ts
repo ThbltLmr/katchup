@@ -16,7 +16,7 @@ enum ProfileSizes {
 }
 
 const useGetTmdbImage = (filePath: string, fileSize: ProfileSizes | PosterSizes): string =>
-	`${import.meta.env.VITE_TMDB_IMAGE_URL}/${fileSize}/${filePath}`
+	`${import.meta.env.VITE_TMDB_IMAGE_BASE_URL}/${fileSize}/${filePath}`
 	;
 
 export default useGetTmdbImage;
