@@ -5,6 +5,7 @@ type CastResult = {
 	name: string;
 	profile_path: string | null;
 	total_episode_count: number;
+	character_description: string | null;
 	roles: {
 		credit_id: string;
 		character: string;
