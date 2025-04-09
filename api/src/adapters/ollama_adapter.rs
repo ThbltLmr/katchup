@@ -58,8 +58,7 @@ impl OllamaAdapter {
             .body(body.to_string())
             .send()
             .unwrap()
-            .json()
-            .unwrap();
+            .json()?;
 
         println!("{:?}", response);
 
@@ -69,50 +68,62 @@ impl OllamaAdapter {
     pub fn describe_cast(
         &self,
         characters: Vec<String>,
-    ) -> Result<CharacterList, Box<dyn std::error::Error>> {
+    ) -> Result<CharacterListResult, Box<dyn std::error::Error>> {
         let url = format!("{}/api/generate", std::env::var("OLLAMA_API_URL").unwrap());
 
         let prompt = format!("You are a critic for TV shows, who has watched every show ever written. Given a list of characters from a TV show, your job is to provide a short description of a character and their role in the story. For example, if you are asked about Joey Tribbiani, your answer could be: 'Actor, Chandler's roommate, great with women'. The characters you have to describe are the following: {:?}", characters);
 
         let body = json!({
-                  "model": "llama3.2:3b",
-                  "stream": false,
-                  "prompt": prompt,
-                  "format": {
-                    "type": "object",
-                    "properties": {
-                        "characters": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    }
+            "model": "llama3.2:3b",
+            "stream": false,
+            "prompt": prompt,
+            "format": {
+                "type": "object",
+                "properties": {
+                    "characters": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
                                 }
+                            },
+                            "required": ["name", "description"]
+                        }
                     }
-                }
-          },
-          "required": [
-            "characters"
-          ]
-        }
-              });
+                },
+                "required": [
+                    "characters"
+                ]
+            }
+        });
 
-        let response: CharacterList = self
+        #[derive(Debug, Deserialize)]
+        struct RawOllamaResponse {
+            response: String,
+            done: bool,
+        }
+
+        let raw_response: RawOllamaResponse = self
             .client
             .post(url)
             .body(body.to_string())
-            .send()
-            .unwrap()
+            .send()?
             .json()
             .unwrap();
 
-        println!("{:?}", response);
+        let character_list: CharacterList = serde_json::from_str(&raw_response.response).unwrap();
 
-        Ok(response)
+        let result = CharacterListResult {
+            done: raw_response.done,
+            response: character_list,
+        };
+
+        println!("{:?}", result);
+        Ok(result)
     }
 }
