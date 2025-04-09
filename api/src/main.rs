@@ -26,9 +26,11 @@ use server::{
     thread_pool::ThreadPool,
 };
 
+/* Exposing 0.0.0.0:8000 */
 const PORT_NUMBER: &str = "8000";
 const LOCALHOST: &str = "0.0.0.0";
 
+/* TODO: Improve error naming */
 #[derive(Debug)]
 enum HandleRequestError {
     InvalidRequestLineError,
@@ -128,6 +130,7 @@ pub fn read_until_empty_line(stream: &mut TcpStream) -> io::Result<String> {
 }
 
 fn main() {
+    /* TODO: implement API key authentication */
     let listener = TcpListener::bind(format!("{}:{}", LOCALHOST, PORT_NUMBER)).unwrap();
     let pool = ThreadPool::build(4).expect("Could not build thread pool");
 
