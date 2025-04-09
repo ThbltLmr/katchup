@@ -37,14 +37,16 @@ impl OllamaAdapter {
     }
 
     pub fn summarize_show(&self, query: &str) -> Result<SummaryResult, Box<dyn std::error::Error>> {
-        let show = query
-            .split_once('=')
-            .expect("Could not find show name in query")
-            .1;
+        let params: Vec<&str> = query.split('&').collect();
+        let (show, season, episode) = (
+            params[0].split('=').collect::<Vec<&str>>()[1],
+            params[1].split('=').collect::<Vec<&str>>()[1],
+            params[2].split('=').collect::<Vec<&str>>()[1],
+        );
 
         let url = format!("{}/api/generate", std::env::var("OLLAMA_API_URL").unwrap());
 
-        let prompt = format!("Tell me a summary about the TV show: {}", show);
+        let prompt = format!("You are a critic for TV shows, who has watched every show ever written. People come to you when they want to catch up to a TV show. You are given the name of the show, as well as the season and episode that the person will watch next. You should give them a detailed summary of what happened until that point. You will only summarize facts, and you will include every major event in your summary. You will not include any opinions or recommandations. You will start the summary with a quick explanation of when and where the show is set, then move to what happens in the show. You will avoid spoilers at all costs, or you will lose your job. For instance, if asked to summarize a show up to S2E2, you should summarize what happened in season 1 and in the first episode of season 2, but no further. Now summarize the show {} up to season {} episode {}", show, season, episode);
 
         let body = json!({
             "model": "llama3.2:3b",
