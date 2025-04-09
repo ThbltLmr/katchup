@@ -42,11 +42,12 @@ pub struct CastMember {
     pub profile_path: Option<String>,
     pub total_episode_count: usize,
     pub roles: Vec<CastMemberRole>,
+    pub character_description: Option<String>,
 }
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct CastDetails {
-    cast: Vec<CastMember>,
+    pub cast: Vec<CastMember>,
 }
 
 pub struct TmdbAdapter {
