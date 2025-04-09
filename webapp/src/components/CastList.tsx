@@ -30,6 +30,9 @@ function CastList({ showId }: { showId: number }) {
                 <CardTitle className="text-base">{actor.roles[0].character}</CardTitle>
               </CardHeader>
               <CardContent className="center">
+                {!!actor.character_description &&
+                  <p>{actor.character_description}</p>
+                }
                 {!!actor.profile_path &&
                   <img className="mx-auto object-scale-down" src={useGetTmdbImage(actor.profile_path, ProfileSizes.w185)} />
                 }
