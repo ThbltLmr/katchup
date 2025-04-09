@@ -1,6 +1,6 @@
 use crate::{
     adapters::{
-        ollama_adapter::{OllamaAdapter, SummaryResult},
+        ollama_adapter::{CharacterListResult, OllamaAdapter, SummaryResult},
         tmdb_adapter::{CastDetails, SearchResults, ShowDetails, TmdbAdapter},
     },
     server::request_parser::Uri,
@@ -91,7 +91,30 @@ impl Router {
     }
 
     fn respond_get_cast(&self, query: &str) -> Result<CastDetails, Box<dyn Error>> {
-        Ok(self.tmdb_adapter.get_cast(query)?)
+        let mut cast = self.tmdb_adapter.get_cast(query)?;
+
+        let characters: Vec<String> = cast
+            .cast
+            .iter()
+            .map(|c| c.roles[0].character.clone())
+            .collect();
+
+        let character_list_result: CharacterListResult =
+            self.ollama_adapter.describe_cast(characters)?;
+
+        for i in 0..cast.cast.len() {
+            let character_name = &cast.cast[i].roles[0].character;
+            let description = character_list_result
+                .response
+                .characters
+                .iter()
+                .find(|&character| &character.name == character_name)
+                .and_then(|character| Some(character.description.clone()));
+
+            cast.cast[i].character_description = description;
+        }
+
+        Ok(cast)
     }
 
     fn respond_get_show(&self, query: &str) -> Result<ShowDetails, Box<dyn Error>> {
