@@ -73,7 +73,7 @@ impl OllamaAdapter {
     ) -> Result<CharacterListResult, Box<dyn std::error::Error>> {
         let url = format!("{}/api/generate", std::env::var("OLLAMA_API_URL").unwrap());
 
-        let prompt = format!("You are a critic for TV shows, who has watched every show ever written. Given a list of characters from a TV show, your job is to provide a short description of a character and their role in the story. For example, if you are asked about Joey Tribbiani, your answer could be: 'Actor, Chandler's roommate, great with women'. The characters you have to describe are the following: {:?}", characters);
+        let prompt = format!("You are a critic for TV shows, who has watched every show ever written. Given a list of characters from a TV show, your job is to provide a short description of a character and their role in the story. For example, if you are asked about Joey Tribbiani, your answer could be: 'Chandler's roommate, great with women, trying to make it as an actor'. The characters you have to describe are the following: {:?}", characters);
 
         let body = json!({
             "model": "llama3.2:3b",
