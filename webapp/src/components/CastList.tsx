@@ -8,17 +8,14 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import { CastResult, useGetCast } from "@/hooks/useGetCast";
 import useGetTmdbImage, { ProfileSizes } from "@/hooks/useGetTmdbImage";
 import { Skeleton } from "./ui/skeleton";
 
 function CastList({ showId }: { showId: number }) {
-  const { data, isError, isLoading } = useGetCast(showId);
+  const { data, isLoading } = useGetCast(showId);
 
   const cast = data?.CastDetails.cast || [];
 
@@ -47,12 +44,16 @@ function CastList({ showId }: { showId: number }) {
 
   const castSkeleton = () => {
     return (
-      <div className="flex flex-col space-y-3">
-        <Skeleton className="h-[250px] w-[250px] rounded-xl" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
+      <div className="flex justify-between w-full">
+        {Array.from({ length: 3 }).map(() =>
+          <div className="flex flex-col h-[400px] basis-1/3 p-4 w-1/4">
+            <Skeleton className="h-[250px] w-full rounded-xl" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-[250px]" />
+              <Skeleton className="h-4 w-[200px]" />
+            </div>
+          </div>
+        )}
       </div>
     )
   }
