@@ -9,3 +9,5 @@ function ShowSummary({ show, season, episode }: { show: string, season: number, 
     </>
   )
 }
+
+export default ShowSummary;
