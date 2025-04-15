@@ -7,22 +7,22 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useGetShow, SeasonResult } from "@/hooks/useGetShow";
+import React from "react";
 
-function SeasonDropdown({ showId, setSelectedSeason, season }: { showId: number, season: SeasonResult | undefined, setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>> }) {
+function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNumber }: { showId: number, season: SeasonResult | undefined, setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>, setSelectedSeasonNumber: React.Dispatch<number | undefined> }) {
   const { data } = useGetShow(showId);
 
   const seasons = data?.ShowDetails.seasons || [];
 
-  const handleSelectSeasonValue = (value: number) => {
-    setSelectedSeason(seasons.find((season) => season.id === value));
+  const handleSelectSeasonValue = (value: SeasonResult) => {
+    setSelectedSeason(seasons.find((season) => season.id === value.id));
+    setSelectedSeasonNumber(seasons.indexOf(value) + 1)
   }
 
 
   return (
     <div className={`m-4 transition-all h-full duration-300 ease-in-out ${!!season ? 'w-1/4' : 'w-1/2'}`}>
-      <Select onValueChange={(currentValue) => {
-        handleSelectSeasonValue(parseInt(currentValue))
-      }}>
+      <Select>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a season" />
         </SelectTrigger>
@@ -30,6 +30,8 @@ function SeasonDropdown({ showId, setSelectedSeason, season }: { showId: number,
           <SelectGroup>
             {seasons.map((season, i) => (
               <SelectItem
+                onSelect={() => handleSelectSeasonValue(season)}
+                key={season.id}
                 value={season.id.toString()}
               >
                 Season {i + 1}
