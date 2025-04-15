@@ -28,6 +28,7 @@ function EpisodeDropdown({ season, setSelectedEpisode }: { season: SeasonResult,
           <SelectGroup>
             {Array.from({ length: season.episode_count }, (_, i) =>
               <SelectItem
+                key={i + 1}
                 value={(i + 1).toString()}
               >
                 Episode {i + 1}
