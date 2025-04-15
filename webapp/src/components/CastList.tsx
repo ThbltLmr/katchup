@@ -26,12 +26,12 @@ function CastList({ showId }: { showId: number }) {
           <Card className="h-[300px]">
             <CardContent className="center">
               {!!actor.profile_path &&
-                <img className="h-[150px] w-full rounded-xl object-cover" src={useGetTmdbImage(actor.profile_path, ProfileSizes.w185)} />
+                <img className="h-[120px] w-full rounded-xl object-cover" src={useGetTmdbImage(actor.profile_path, ProfileSizes.w185)} />
               }
               <div className="py-2 text-start">
-                <span className="h-4 text-base w-full font-bold">{actor.roles[0].character}</span>
-                <span className="h-4 text-sm w-full"> ({actor.name})</span>
-                <p className="h-4 pt-4 text-start text-sm w-full">{(!!actor.character_description && actor.character_description.length > 0) ? actor.character_description : "No description available"}</p>
+                <span className="h-4 text-sm w-full font-bold">{actor.roles[0].character}</span>
+                <span className="h-4 text-xs w-full"> ({actor.name})</span>
+                <p className="h-4 pt-4 text-start text-xs w-full">{(!!actor.character_description && actor.character_description.length > 0) ? actor.character_description : "No description available"}</p>
               </div>
             </CardContent>
             <CardFooter>
@@ -46,9 +46,9 @@ function CastList({ showId }: { showId: number }) {
     return (
       <div className="flex justify-between w-full">
         {Array.from({ length: 5 }).map(() =>
-          <div className="flex flex-col h-[400px] basis-1/5 p-4 w-1/6">
+          <div className="flex flex-col h-[300px] basis-1/5 p-2 w-1/6">
             <Skeleton className="h-[150px] w-full rounded-xl" />
-            <div className="space-y-2">
+            <div className="my-2">
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-full" />
             </div>
