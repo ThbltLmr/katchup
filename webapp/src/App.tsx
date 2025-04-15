@@ -30,9 +30,9 @@ function App() {
               <h1>Katchup</h1>
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
-              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} />
+              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} />
               {selectedShowId > 0 &&
-                <SeasonDropdown showId={selectedShowId} setSelectedSeason={setSelectedSeason} season={selectedSeason} />
+                <SeasonDropdown showId={selectedShowId} setSelectedSeason={setSelectedSeason} season={selectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
               }
               {!!selectedSeason &&
                 <EpisodeDropdown season={selectedSeason} setSelectedEpisode={setSelectedEpisode} />
