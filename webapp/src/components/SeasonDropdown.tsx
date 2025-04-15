@@ -14,9 +14,9 @@ function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNu
 
   const seasons = data?.ShowDetails.seasons || [];
 
-  const handleSelectSeasonValue = (value: SeasonResult) => {
-    setSelectedSeason(seasons.find((season) => season.id === value.id));
-    setSelectedSeasonNumber(seasons.indexOf(value) + 1)
+  const handleSelectSeasonValue = ({ season, i }: { season: SeasonResult, i: number }) => {
+    setSelectedSeason(seasons.find((s) => s.id === season.id));
+    setSelectedSeasonNumber(i + 1);
   }
 
 
@@ -30,7 +30,7 @@ function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNu
           <SelectGroup>
             {seasons.map((season, i) => (
               <SelectItem
-                onSelect={() => handleSelectSeasonValue(season)}
+                onClick={() => handleSelectSeasonValue({ season, i })}
                 key={season.id}
                 value={season.id.toString()}
               >
