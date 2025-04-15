@@ -46,12 +46,11 @@ function CastList({ showId }: { showId: number }) {
     return (
       <div className="flex justify-between w-full">
         {Array.from({ length: 5 }).map(() =>
-          <div className="flex flex-col h-[300px] basis-1/5 p-2 w-1/6">
+          <div className="flex flex-col justify-between h-[300px] basis-1/5 p-2 w-1/6">
             <Skeleton className="h-[150px] w-full rounded-xl" />
-            <div className="my-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-            </div>
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-20 w-full" />
           </div>
         )}
       </div>
