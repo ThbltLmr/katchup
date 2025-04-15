@@ -23,5 +23,5 @@ const useSearchShows = (query: string) =>
 		enabled: !!query,
 	});
 
-export default useSearchShows;
+export { useSearchShows, type ShowResult };
 
