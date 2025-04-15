@@ -59,13 +59,18 @@ function CastList({ showId }: { showId: number }) {
   }
 
   return (
-    <Carousel>
-      <CarouselContent className="p-2">
-        {isLoading ? castSkeleton() : castCards(cast)}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <>
+      <div className='my-2 text-lg font-semibold'>
+        <h1>Cast</h1>
+      </div>
+      <Carousel>
+        <CarouselContent className="p-2">
+          {isLoading ? castSkeleton() : castCards(cast)}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </>
   )
 }
 

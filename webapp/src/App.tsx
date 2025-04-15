@@ -26,7 +26,7 @@ function App() {
             <div className='absolute top-0 right-0'>
               <ModeToggle />
             </div>
-            <div className='my-8 text-2xl font-semibold'>
+            <div className='my-8 text-3xl font-semibold'>
               <h1>Katchup</h1>
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
