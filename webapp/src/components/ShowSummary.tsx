@@ -8,7 +8,7 @@ function ShowSummary({ show, season, episode }: { show: string, season: number, 
       <div className='my-2 text-lg font-semibold'>
         <h1>Summary</h1>
       </div>
-      {isLoading ? <p>Loading...</p> : <p>{data?.SummaryResult.response}</p>}
+      {isLoading ? <p>Loading...</p> : <p className="whitespace-pre-line text-base text-justify">{data?.SummaryResult.response}</p>}
     </>
   )
 }
