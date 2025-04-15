@@ -1,0 +1,17 @@
+<svg width="240" height="80" viewBox="0 0 240 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="80" fill="none"/>
+  
+  <circle cx="60" cy="60" r="55" fill="#E53935" />
+
+  <polygon points="40,30 80,30 40,80" fill="white" />
+  <polygon points="60,65 80,90 40,90" fill="white" />
+
+  <!-- Katchup Text -->
+  <text x="80" y="48" font-family="Segoe UI, sans-serif" font-size="32" fill="#333" font-weight="600">
+    Katchup
+  </text>
+  
+  <!-- Progress bar under text -->
+  <rect x="80" y="55" width="120" height="6" rx="3" fill="#ddd"/>
+  <rect x="80" y="55" width="72" height="6" rx="3" fill="#FF4C4C"/>
+</svg>
