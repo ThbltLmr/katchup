@@ -14,15 +14,17 @@ function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNu
 
   const seasons = data?.ShowDetails.seasons || [];
 
-  const handleSelectSeasonValue = ({ season, i }: { season: SeasonResult, i: number }) => {
-    setSelectedSeason(seasons.find((s) => s.id === season.id));
-    setSelectedSeasonNumber(i + 1);
+  const handleSelectSeasonValue = (value: string) => {
+    const seasonIndex = parseInt(value);
+    const season = seasons[seasonIndex]
+    setSelectedSeason(season);
+    setSelectedSeasonNumber(seasonIndex + 1);
   }
 
 
   return (
     <div className={`m-4 transition-all h-full duration-300 ease-in-out ${!!season ? 'w-1/4' : 'w-1/2'}`}>
-      <Select>
+      <Select onValueChange={handleSelectSeasonValue}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a season" />
         </SelectTrigger>
@@ -30,9 +32,8 @@ function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNu
           <SelectGroup>
             {seasons.map((season, i) => (
               <SelectItem
-                onClick={() => handleSelectSeasonValue({ season, i })}
                 key={season.id}
-                value={season.id.toString()}
+                value={i.toString()}
               >
                 Season {i + 1}
               </SelectItem>
