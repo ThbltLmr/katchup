@@ -23,11 +23,12 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
           <div className='mx-auto relative w-full'>
-            <div className='absolute top-0 right-0'>
+            <div className='absolute top-0 right-4'>
               <ModeToggle />
             </div>
-            <div className='my-8 text-3xl font-semibold'>
+            <div className='my-8 text-8xl font-semibold'>
               <h1>Katchup</h1>
+              <h1 className='text-3xl mt-8'>Catch up to your favorite shows with AI-generated, spoiler-free summaries</h1>
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
               <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} />
