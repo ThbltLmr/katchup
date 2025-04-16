@@ -79,6 +79,9 @@ impl OllamaAdapter {
             "model": "llama3.2:3b",
             "stream": false,
             "prompt": prompt,
+            "options": {
+            "num_ctx": 4096,
+        },
             "format": {
                 "type": "object",
                 "properties": {
