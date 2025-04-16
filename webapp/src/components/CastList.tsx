@@ -54,11 +54,11 @@ function CastList({ showId }: { showId: number }) {
 
   return (
     <>
-      <div className='text-start ms-2 my-2 text-2xl font-semibold'>
+      <div className='text-start ms-4 my-2 text-2xl font-semibold'>
         <h1>Cast</h1>
       </div>
       <Carousel>
-        <CarouselContent className="p-2">
+        <CarouselContent className="p-4">
           {isLoading ? castSkeleton() : castCards(cast)}
         </CarouselContent>
         <CarouselPrevious />

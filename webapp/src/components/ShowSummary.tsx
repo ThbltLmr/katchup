@@ -5,7 +5,7 @@ function ShowSummary({ show, season, episode }: { show: string, season: number, 
 
   return (
     <>
-      <div className='my-2 text-lg font-semibold'>
+      <div className='ms-2 text-start my-2 text-2xl font-semibold'>
         <h1>Summary</h1>
       </div>
       {isLoading ? <p>Loading...</p> : <p className="whitespace-pre-line text-base text-justify">{data?.SummaryResult.response}</p>}
