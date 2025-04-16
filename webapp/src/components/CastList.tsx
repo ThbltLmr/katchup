@@ -24,18 +24,14 @@ function CastList({ showId }: { showId: number }) {
       cast.map((actor) =>
         <CarouselItem key={actor.id} className="basis-1/5 w-1/6">
           <Card className="center h-[300px]">
-            <CardContent className="h-full">
-              <div className="flex flex-col h-full justify-between">
-                {!!actor.profile_path &&
-                  <img className="h-[120px] w-full rounded-xl object-cover" src={useGetTmdbImage(actor.profile_path, ProfileSizes.w185)} />
-                }
-                <p className="h-4 text-sm w-full font-bold">{actor.roles[0].character}</p>
-                <p className="h-4 text-xs w-full"> ({actor.name})</p>
-                <p className="h-20 text-start align-middle text-xs w-full">{(!!actor.character_description && actor.character_description.length > 0) ? actor.character_description : "No description available"}</p>
-              </div>
+            <CardContent className="flex flex-col h-full justify-between">
+              {!!actor.profile_path &&
+                <img className="h-[120px] w-full rounded-xl object-cover" src={useGetTmdbImage(actor.profile_path, ProfileSizes.w185)} />
+              }
+              <p className="h-4 text-sm w-full font-bold">{actor.roles[0].character}</p>
+              <p className="h-4 text-xs w-full"> ({actor.name})</p>
+              <p className="h-20 text-start align-middle text-xs w-full">{(!!actor.character_description && actor.character_description.length > 0) ? actor.character_description : "No description available"}</p>
             </CardContent>
-            <CardFooter>
-            </CardFooter>
           </Card>
 
         </CarouselItem>
