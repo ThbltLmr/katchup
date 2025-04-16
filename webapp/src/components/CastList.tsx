@@ -8,7 +8,6 @@ import {
 import {
   Card,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card"
 import { CastResult, useGetCast } from "@/hooks/useGetCast";
 import useGetTmdbImage, { ProfileSizes } from "@/hooks/useGetTmdbImage";
@@ -55,7 +54,7 @@ function CastList({ showId }: { showId: number }) {
 
   return (
     <>
-      <div className='my-2 text-lg font-semibold'>
+      <div className='text-start ms-2 my-2 text-2xl font-semibold'>
         <h1>Cast</h1>
       </div>
       <Carousel>
