@@ -1,14 +1,22 @@
 import useGetSummary from "@/hooks/useGetSummary";
+import { Skeleton } from "./ui/skeleton";
 
 function ShowSummary({ show, season, episode }: { show: string, season: number, episode: number }) {
   const { data, isLoading } = useGetSummary(show, season, episode);
 
+  const summarySkeleton = () =>
+    <div>
+      <Skeleton className="h-8 mx-4 my-2" />
+      <Skeleton className="h-8 mx-4 my-2" />
+      <Skeleton className="h-8 mx-4 my-2" />
+    </div>
+
   return (
     <>
-      <div className='ms-2 text-start my-2 text-2xl font-semibold'>
+      <div className='mx-4 text-start my-2 text-2xl font-semibold'>
         <h1>Summary</h1>
       </div>
-      {isLoading ? <p>Loading...</p> : <p className="whitespace-pre-line text-base text-justify">{data?.SummaryResult.response}</p>}
+      {isLoading ? summarySkeleton() : <p className="p-4 whitespace-pre-line text-base text-justify">{data?.SummaryResult.response}</p>}
     </>
   )
 }
