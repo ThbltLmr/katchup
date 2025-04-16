@@ -34,7 +34,7 @@ function App() {
               <h1>What do you want to catch up on?</h1>
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
-              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} />
+              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedEpisode={setSelectedEpisode} />
               {selectedShowId > 0 &&
                 <SeasonDropdown showId={selectedShowId} setSelectedSeason={setSelectedSeason} season={selectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
               }

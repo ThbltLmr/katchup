@@ -8,8 +8,9 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { ShowResult, useSearchShows } from "@/hooks/useSearchShows";
+import { SeasonResult } from "@/hooks/useGetShow";
 
-function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName }: { selectedShowId: number, setSelectedShowId: React.Dispatch<React.SetStateAction<number>>, setSelectedShowName: React.Dispatch<React.SetStateAction<string>> }) {
+function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, setSelectedSeason, setSelectedEpisode }: { selectedShowId: number, setSelectedShowId: React.Dispatch<React.SetStateAction<number>>, setSelectedShowName: React.Dispatch<React.SetStateAction<string>>, setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>, setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>> }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>('');
 
@@ -17,6 +18,8 @@ function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName }: {
   const shows = data?.SearchResults.results;
 
   const handleSearch = (value: string) => {
+    setSelectedSeason(undefined);
+    setSelectedEpisode(undefined);
     setSelectedShowId(0);
 
     if (value === '') {
@@ -39,7 +42,7 @@ function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName }: {
     <Command className={`m-4 h-full transition-all duration-300 ease-in-out ${selectedShowId > 0 ? 'w-1/2' : 'w-full'}`}>
       <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} value={shows?.find((show) => show.id === selectedShowId)?.name || undefined} />
       <CommandList hidden={!open}>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>{isPending ? "Searching..." : "No results found."}</CommandEmpty>
         {!!shows && !isPending &&
           <CommandGroup heading="Search results">
             {shows.map((show) => <CommandItem key={show.id} onSelect={() => handleShowSelect(show)}>{show.name}</CommandItem>)}
