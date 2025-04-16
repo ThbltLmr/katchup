@@ -26,9 +26,12 @@ function App() {
             <div className='absolute top-0 right-4'>
               <ModeToggle />
             </div>
-            <div className='my-8 text-8xl font-semibold'>
+            <div className='mt-8 mb-16 text-8xl font-semibold'>
               <h1>Katchup</h1>
               <h1 className='text-3xl mt-8'>Catch up to your favorite shows with AI-generated, spoiler-free summaries</h1>
+            </div>
+            <div className='text-start ms-4 my-2 text-2xl font-semibold'>
+              <h1>What do you want to catch up on?</h1>
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
               <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} />
