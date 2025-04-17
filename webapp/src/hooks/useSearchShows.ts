@@ -13,7 +13,7 @@ type SearchShowsDto = {
 
 const searchShows = async (query: string): Promise<SearchShowsDto> => {
 	return fetch(`${import.meta.env.VITE_API_BASE_URL}/search?query=${query}`)
-		.then((res) => res.json());
+		.then((res) => res.json()).catch((e) => console.error(e));
 };
 
 const useSearchShows = (query: string) =>
