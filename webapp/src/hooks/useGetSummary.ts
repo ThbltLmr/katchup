@@ -8,7 +8,7 @@ type SummaryDto = {
 
 const getSummary = async (show: string, season: number, episode: number): Promise<SummaryDto> => {
 	return fetch(`${import.meta.env.VITE_API_BASE_URL}/summary?query=${show}&season=${season}&episode=${episode}`)
-		.then((res) => res.json());
+		.then((res) => res.json()).catch((e) => console.error(e));
 };
 
 const useGetSummary = (show: string, season: number, episode: number) =>
