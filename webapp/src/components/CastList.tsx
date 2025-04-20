@@ -40,8 +40,8 @@ function CastList({ showId }: { showId: number }) {
   const castSkeleton = () => {
     return (
       <div className="ms-2 flex justify-between w-full">
-        {Array.from({ length: 5 }).map(() =>
-          <div className="ms-2 flex flex-col justify-between h-[300px] w-1/5">
+        {Array.from({ length: 5 }).map((_, i) =>
+          <div key={i} className="ms-2 flex flex-col justify-between h-[300px] w-1/5">
             <Skeleton className="h-[150px] w-full rounded-xl" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
@@ -54,9 +54,7 @@ function CastList({ showId }: { showId: number }) {
 
   const errorContent = () => {
     return (
-      <div className="error-message" role="alert">
-        <p>Error: Could not retrieve cast data. Please try again later.</p>
-      </div>
+      <p>Could not retrieve cast data. Please try again later.</p>
     )
   }
 
@@ -65,13 +63,15 @@ function CastList({ showId }: { showId: number }) {
       <div className='text-start ms-4 my-2 text-2xl font-semibold'>
         <h1>Cast</h1>
       </div>
-      <Carousel>
-        <CarouselContent className="p-4">
-          {isError ? errorContent() : isLoading ? castSkeleton() : castCards(cast)}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      {isError ? errorContent() :
+        <Carousel>
+          <CarouselContent className="p-4">
+            {isLoading ? castSkeleton() : castCards(cast)}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      }
     </>
   )
 }
