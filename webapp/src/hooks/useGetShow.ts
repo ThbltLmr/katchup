@@ -16,7 +16,7 @@ type GetShowDto = {
 
 const getShow = async (query: number): Promise<GetShowDto> => {
 	return fetch(`${import.meta.env.VITE_API_BASE_URL}/shows?query=${query}`)
-		.then((res) => res.json()).catch((e) => console.error(e));
+		.then((res) => res.json()).catch((e) => { throw new Error(e) });
 };
 
 const useGetShow = (query: number) =>

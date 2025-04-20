@@ -21,7 +21,7 @@ type GetCastDto = {
 
 const getCast = async (query: number): Promise<GetCastDto> => {
 	return fetch(`${import.meta.env.VITE_API_BASE_URL}/cast?query=${query}`)
-		.then((res) => res.json()).catch((e) => console.error(e));
+		.then((res) => res.json()).catch((e) => { throw new Error(e) });
 };
 
 const useGetCast = (query: number) =>
