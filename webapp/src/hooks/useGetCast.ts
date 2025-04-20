@@ -37,6 +37,7 @@ const useGetCast = (query: number) =>
 		queryKey: ["cast", query],
 		queryFn: () => getCast(query),
 		enabled: !!query,
+		retry: false,
 	});
 
 export { useGetCast, type CastResult };

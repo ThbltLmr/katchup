@@ -24,6 +24,7 @@ const useGetSummary = (show: string, season: number, episode: number) =>
 		queryKey: ["summary", show, season, episode],
 		queryFn: () => getSummary(show, season, episode),
 		enabled: !!show,
+		retry: false,
 	});
 
 export default useGetSummary;
