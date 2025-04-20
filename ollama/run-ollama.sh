@@ -1,3 +1,3 @@
 ollama serve &
 ollama list
-ollama run gemma3:4b
+ollama run llama3.2:3b
