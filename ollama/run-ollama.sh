@@ -1,3 +1,3 @@
 ollama serve &
 ollama list
-ollama run gemma3:4b-it-qat
+ollama run llama3.2:3b --keepalive=-1m
