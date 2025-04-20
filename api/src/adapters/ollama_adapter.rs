@@ -49,7 +49,7 @@ impl OllamaAdapter {
         let prompt = format!("You are a critic for TV shows, who has watched every show ever written. People come to you when they want to catch up to a TV show. You are given the name of the show, as well as the season and episode that the person will watch next. You should give them a detailed summary of what happened until that point. You will only summarize facts, and you will include every major event in your summary. You will not include any opinions or recommandations. Your answer will only include the summary of the show: you will not write anything in the first person, nor will you wish a 'happy viewing' or anything along these lines. Your answer will not have any conversational filler, only a factual summary of the show up to the mentioned episode. You will start the summary with a quick explanation of when and where the show is set, then move to what happens in the show. You will avoid spoilers at all costs, or you will lose your job. For instance, if asked to summarize a show up to season 2 episode 2, you should summarize what happened in season 1 and in the first episode of season 2, but no further. Now summarize the show {} up to season {} episode {}", show, season, episode);
 
         let body = json!({
-            "model": "llama3.2:3b",
+            "model": "gemma3:4b-it-qat",
             "stream": false,
             "prompt": prompt
         });
@@ -76,7 +76,7 @@ impl OllamaAdapter {
         let prompt = format!("You are a critic for TV shows, who has watched every show ever written. Given a list of characters from a TV show, your job is to provide a short description of a character and their role in the story. For example, if you are asked about Joey Tribbiani, your answer could be: 'Chandler's roommate, great with women, trying to make it as an actor'. The characters you have to describe are the following: {:?}", characters);
 
         let body = json!({
-            "model": "llama3.2:3b",
+            "model": "gemma3:4b-it-qat",
             "stream": false,
             "prompt": prompt,
             "options": {
