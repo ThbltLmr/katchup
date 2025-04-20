@@ -14,7 +14,7 @@ import useGetTmdbImage, { ProfileSizes } from "@/hooks/useGetTmdbImage";
 import { Skeleton } from "./ui/skeleton";
 
 function CastList({ showId }: { showId: number }) {
-  const { data, isLoading } = useGetCast(showId);
+  const { data, isLoading, isError } = useGetCast(showId);
 
   const cast = data?.CastDetails.cast || [];
 
@@ -52,6 +52,14 @@ function CastList({ showId }: { showId: number }) {
     )
   }
 
+  const errorContent = () => {
+    return (
+      <div className="error-message" role="alert">
+        <p>Error: Could not retrieve cast data. Please try again later.</p>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='text-start ms-4 my-2 text-2xl font-semibold'>
@@ -59,7 +67,7 @@ function CastList({ showId }: { showId: number }) {
       </div>
       <Carousel>
         <CarouselContent className="p-4">
-          {isLoading ? castSkeleton() : castCards(cast)}
+          {isError ? errorContent() : isLoading ? castSkeleton() : castCards(cast)}
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
