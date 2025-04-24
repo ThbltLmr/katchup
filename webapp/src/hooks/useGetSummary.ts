@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 
 type SummaryDto = {
-	SummaryResult: {
-		response: string;
-	}
+	SummaryResult: string;
 }
 
 const getSummary = async (show: string, season: number, episode: number): Promise<SummaryDto | void> => {

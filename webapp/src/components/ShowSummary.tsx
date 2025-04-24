@@ -16,7 +16,7 @@ function ShowSummary({ show, season, episode }: { show: string, season: number, 
       <div className='mx-4 text-start my-2 text-2xl font-semibold'>
         <h1>Summary</h1>
       </div>
-      {isLoading ? summarySkeleton() : <p className="p-4 whitespace-pre-line text-base text-justify">{data?.SummaryResult.response}</p>}
+      {isLoading ? summarySkeleton() : <p className="p-4 whitespace-pre-line text-base text-justify">{data?.SummaryResult}</p>}
     </>
   )
 }
