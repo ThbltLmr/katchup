@@ -32,7 +32,6 @@ function CastList({ showId }: { showId: number }) {
               <p className="h-20 text-start align-middle text-xs w-full">{(!!actor.character_description && actor.character_description.length > 0) ? actor.character_description : "No description available"}</p>
             </CardContent>
           </Card>
-
         </CarouselItem>
       ))
   }
