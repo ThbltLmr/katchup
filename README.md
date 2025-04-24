@@ -43,3 +43,20 @@ This directory contains hooks using Tanstack Query to make HTTP requests to the 
 - useGetSummary.ts: fetches AI generated summary of a show up to a given season and episode.
 - useSearchShows.ts: fetches a list of shows matching a search query.
 - useGetTmdbImage.ts: build image URL of a TMDB profile image.
+
+#### Components
+- ui directory: collection of ShadCN components used in the app.
+- providers: theme provider from ShadCN.
+- SearchBar.tsx: search bar component, using useSearchShows hook.
+- SeasonDropdown.tsx and EpisodeDropdown.tsx: dropdown menus to select a season and episode once a show has been selected (based on data fetched from useGetShow hook).
+- CastList.tsx: carrousel component with cards for the show characters, using the data from the useGetCast hook.
+- ShowSummary.tsx: summary of the show (using data from useGetSummary hook).
+
+#### Entry point - App.tsx
+The state for the selected show, season and episode are managed at a global scope in App.tsx.
+Components are rendered conditionally as the user makes their selection.
+
+
+### OLLAMA (deprecated) - Dockerfile and shell script to deploy ollama server
+This directory contains a Dockerfile and an associated shell script to start an ollama server with llama3.2. It is not needed since the API now uses gemini_provider.rs.
+The docker-compose file has been edited to remove the ollama image as well.
