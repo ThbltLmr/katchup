@@ -23,3 +23,11 @@ This directory contains the services used to make external API calls. It uses th
 - tmdb_adapter.rs: Handles communication with The Movie Database (TMDB) API to search for shows, get show details (seasons, episode count), and fetch aggregated cast credits (used to get list of cast and characters).
 - gemini_adapter.rs: Uses the Google Gemini API to generate summaries of shows up to a specific point and to provide descriptions for lists of characters.
 - ollama_adapter.rs (deprecated): Similar to the gemini_adapter.rs file, but using a local Ollama server with llama3.2. Deprecated as performance and quality was much lower than Gemini.
+
+##### main.rs
+When the server receives a request:
+- the request is assigned to one of the threads of the thread pool.
+- the request is parsed and the route and parameters are extracted.
+- if the request matches an implemented route, it is handled, otherwise a 404 error is returned.
+- depending on the request, data is retrieved from the TMDB API, the Gemini API or both.
+- the retrieved data is formatted and a 200 OK response is returned with the formatted data.
