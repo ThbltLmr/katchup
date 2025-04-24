@@ -1,6 +1,6 @@
 use crate::{
     adapters::{
-        ollama_adapter::{CharacterListResult, OllamaAdapter, SummaryResult},
+        gemini_adapter::{CharacterList, GeminiAdapter},
         tmdb_adapter::{CastDetails, SearchResults, ShowDetails, TmdbAdapter},
     },
     server::request_parser::Uri,
@@ -22,7 +22,7 @@ pub enum RouterResponse {
     CastDetails(CastDetails),
     SearchResults(SearchResults),
     ShowDetails(ShowDetails),
-    SummaryResult(SummaryResult),
+    SummaryResult(String),
     None,
 }
 
@@ -44,22 +44,22 @@ impl From<ShowDetails> for RouterResponse {
     }
 }
 
-impl From<SummaryResult> for RouterResponse {
-    fn from(summary: SummaryResult) -> Self {
+impl From<String> for RouterResponse {
+    fn from(summary: String) -> Self {
         RouterResponse::SummaryResult(summary)
     }
 }
 
 pub struct Router {
     tmdb_adapter: TmdbAdapter,
-    ollama_adapter: OllamaAdapter,
+    gemini_adapter: GeminiAdapter,
 }
 
 impl Router {
     pub fn new() -> Self {
         Router {
             tmdb_adapter: TmdbAdapter::new(),
-            ollama_adapter: OllamaAdapter::new(),
+            gemini_adapter: GeminiAdapter::new(),
         }
     }
 
@@ -99,13 +99,11 @@ impl Router {
             .map(|c| c.roles[0].character.clone())
             .collect();
 
-        let character_list_result: CharacterListResult =
-            self.ollama_adapter.describe_cast(characters)?;
+        let character_list_result: CharacterList = self.gemini_adapter.describe_cast(characters)?;
 
         for i in 0..cast.cast.len() {
             let character_name = &cast.cast[i].roles[0].character;
             let description = character_list_result
-                .response
                 .characters
                 .iter()
                 .find(|&character| &character.name == character_name)
@@ -125,8 +123,8 @@ impl Router {
         Ok(self.tmdb_adapter.search_tv_show(query)?)
     }
 
-    fn respond_summary(&self, query: &str) -> Result<SummaryResult, Box<dyn Error>> {
-        Ok(self.ollama_adapter.summarize_show(query)?)
+    fn respond_summary(&self, query: &str) -> Result<String, Box<dyn Error>> {
+        Ok(self.gemini_adapter.summarize_show(query)?)
     }
 }
 
