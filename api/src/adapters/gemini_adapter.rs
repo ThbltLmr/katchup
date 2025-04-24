@@ -33,13 +33,14 @@ pub struct Candidate {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct CharacterListResult {
+pub struct GeminiResponse {
     pub candidates: Vec<Candidate>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct SummaryResult {
-    pub candidates: Vec<Candidate>,
+impl GeminiResponse {
+    pub fn get_text(&self) -> String {
+        self.candidates[0].content.parts[0].text.clone()
+    }
 }
 
 impl GeminiAdapter {
@@ -49,7 +50,7 @@ impl GeminiAdapter {
         }
     }
 
-    pub fn summarize_show(&self, query: &str) -> Result<SummaryResult, Box<dyn std::error::Error>> {
+    pub fn summarize_show(&self, query: &str) -> Result<String, Box<dyn std::error::Error>> {
         let params: Vec<&str> = query.split('&').collect();
         let (show, season, episode) = (
             params[0].split('=').collect::<Vec<&str>>()[1],
@@ -57,7 +58,7 @@ impl GeminiAdapter {
             params[2].split('=').collect::<Vec<&str>>()[1],
         );
 
-        let url = format!("{}/api/generate", std::env::var("OLLAMA_API_URL").unwrap());
+        let url = format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key={}", std::env::var("GEMINI_API_KEY").unwrap());
 
         let prompt = format!("You are a critic for TV shows, who has watched every show ever written. People come to you when they want to catch up to a TV show. You are given the name of the show, as well as the season and episode that the person will watch next. You should give them a detailed summary of what happened until that point. You will only summarize facts, and you will include every major event in your summary. You will not include any opinions or recommandations. Your answer will only include the summary of the show: you will not write anything in the first person, nor will you wish a 'happy viewing' or anything along these lines. Your answer will not have any conversational filler, only a factual summary of the show up to the mentioned episode. You will start the summary with a quick explanation of when and where the show is set, then move to what happens in the show. You will avoid spoilers at all costs, or you will lose your job. For instance, if asked to summarize a show up to season 2 episode 2, you should summarize what happened in season 1 and in the first episode of season 2, but no further. Now summarize the show {} up to season {} episode {}", show, season, episode);
 
@@ -65,7 +66,7 @@ impl GeminiAdapter {
             "contents": [{ "parts": [ { "text": prompt } ] }]
         });
 
-        let response: SummaryResult = self
+        let response: GeminiResponse = self
             .client
             .post(url)
             .body(body.to_string())
@@ -75,19 +76,19 @@ impl GeminiAdapter {
 
         println!("{:?}", response);
 
-        Ok(response)
+        Ok(response.get_text())
     }
 
     pub fn describe_cast(
         &self,
         characters: Vec<String>,
-    ) -> Result<CharacterListResult, Box<dyn std::error::Error>> {
-        let url = format!("{}/api/generate", std::env::var("OLLAMA_API_URL").unwrap());
+    ) -> Result<CharacterList, Box<dyn std::error::Error>> {
+        let url = format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key={}", std::env::var("GEMINI_API_KEY").unwrap());
 
         let prompt = format!("You are a critic for TV shows, who has watched every show ever written. Given a list of characters from a TV show, your job is to provide a short description of a character and their role in the story. For example, if you are asked about Joey Tribbiani, your answer could be: 'Chandler's roommate, great with women, trying to make it as an actor'. The characters you have to describe are the following: {:?}", characters);
 
         let body = json!({
-            "contents": [{ "parts": [ { "text": prompt } ] }],
+           "contents": [{ "parts": [ { "text": prompt } ] }],
             "generationConfig": {
                 "response_mime_type": "application/json",
                 "response_schema": {
@@ -113,46 +114,7 @@ impl GeminiAdapter {
         }
             });
 
-        let body = json!({
-            "model": "llama3.2:3b",
-            "keep_alive": -1,
-            "stream": false,
-            "prompt": prompt,
-            "options": {
-            "num_ctx": 4096,
-        },
-            "format": {
-                "type": "object",
-                "properties": {
-                    "characters": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "name": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": ["name", "description"]
-                        }
-                    }
-                },
-                "required": [
-                    "characters"
-                ]
-            }
-        });
-
-        #[derive(Debug, Deserialize)]
-        struct RawOllamaResponse {
-            response: String,
-            done: bool,
-        }
-
-        let raw_response: RawOllamaResponse = self
+        let raw_response: GeminiResponse = self
             .client
             .post(url)
             .body(body.to_string())
@@ -160,14 +122,9 @@ impl GeminiAdapter {
             .json()
             .unwrap();
 
-        let character_list: CharacterList = serde_json::from_str(&raw_response.response).unwrap();
+        let character_list: CharacterList = serde_json::from_str(&raw_response.get_text()).unwrap();
 
-        let result = CharacterListResult {
-            done: raw_response.done,
-            response: character_list,
-        };
-
-        println!("{:?}", result);
-        Ok(result)
+        println!("{:?}", character_list);
+        Ok(character_list)
     }
 }
