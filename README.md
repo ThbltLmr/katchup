@@ -24,7 +24,7 @@ This directory contains the services used to make external API calls. It uses th
 - gemini_adapter.rs: Uses the Google Gemini API to generate summaries of shows up to a specific point and to provide descriptions for lists of characters.
 - ollama_adapter.rs (deprecated): Similar to the gemini_adapter.rs file, but using a local Ollama server with llama3.2. Deprecated as performance and quality was much lower than Gemini.
 
-#### main.rs
+#### Entry point - main.rs
 When the server receives a request:
 - the request is assigned to one of the threads of the thread pool.
 - the request is parsed and the route and parameters are extracted.
@@ -32,15 +32,14 @@ When the server receives a request:
 - depending on the request, data is retrieved from the TMDB API, the Gemini API or both.
 - the retrieved data is formatted and a 200 OK response is returned with the formatted data.
 
-### WEBAPP - SPA React app built with Vite, Tanstack Query, and ShadCN
+### WEBAPP - React app built with Vite, Tanstack Query, and ShadCN
 #### Assets
 This directory contains the logo of the app (generated with ChatGPT) in SVG format
 
-
 #### Hooks
-This directory contains the hooks based on Tanstack Query, used to make HTTP requests to the server.
-- useGetCast.ts:
-- useGetShow.ts:
-- useGetSummary.ts:
-- useSearchShows.ts:
-- useGetTmdbImage.ts:
+This directory contains hooks using Tanstack Query to make HTTP requests to the server.
+- useGetCast.ts: fetches the cast list, along with the character they play and an AI-generated description of that character.
+- useGetShow.ts: fetches information about a given show (number of seasons, episodes...).
+- useGetSummary.ts: fetches AI generated summary of a show up to a given season and episode.
+- useSearchShows.ts: fetches a list of shows matching a search query.
+- useGetTmdbImage.ts: build image URL of a TMDB profile image.
