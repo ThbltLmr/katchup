@@ -106,8 +106,8 @@ impl Router {
             let description = character_list_result
                 .characters
                 .iter()
-                .find(|&character| &character.name == character_name)
-                .and_then(|character| Some(character.description.clone()));
+                .find(|&character| &character.character_name == character_name)
+                .and_then(|character| Some(character.character_description.clone()));
 
             cast.cast[i].character_description = description;
         }

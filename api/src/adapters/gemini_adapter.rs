@@ -8,8 +8,8 @@ pub struct GeminiAdapter {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Character {
-    pub name: String,
-    pub description: String,
+    pub character_name: String,
+    pub character_description: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -81,38 +81,44 @@ impl GeminiAdapter {
 
     pub fn describe_cast(
         &self,
-        characters: Vec<String>,
+        mut characters: Vec<String>,
     ) -> Result<CharacterList, Box<dyn std::error::Error>> {
+        if characters.len() > 10 {
+            characters.truncate(10);
+        }
+
         let url = format!("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key={}", std::env::var("GEMINI_API_KEY").unwrap());
 
         let prompt = format!("You are a critic for TV shows, who has watched every show ever written. Given a list of characters from a TV show, your job is to provide a short description of a character and their role in the story. For example, if you are asked about Joey Tribbiani, your answer could be: 'Chandler's roommate, great with women, trying to make it as an actor'. The characters you have to describe are the following: {:?}", characters);
 
         let body = json!({
-           "contents": [{ "parts": [ { "text": prompt } ] }],
-            "generationConfig": {
-                "response_mime_type": "application/json",
-                "response_schema": {
-                "type": "OBJECT",
+               "contents": [{ "parts": [ { "text": prompt } ] }],
+                "generationConfig": {
+            "response_mime_type": "application/json",
+            "response_schema": {
                 "properties": {
                     "characters": {
-            "type": "ARRAY",
-            "items": {
-            "type": "OBJECT",
-            "properties": {
-                    "name": {
-                                    "type": "STRING"
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "character_description": {
+                                    "type": "string"
                                 },
-                                "description": {
-                                    "type": "STRING"
+                                "character_name": {
+                                    "type": "string"
                                 }
-
-        }
-        }
-        },
-                }
+                            },
+                            "required": ["character_name", "character_description"]
+                        },
+                        "type": "ARRAY"
+                    }
+                },
+                "type": "OBJECT"
             }
         }
-            });
+               });
+
+        println!("Body: {}", body);
 
         let raw_response: GeminiResponse = self
             .client
@@ -121,6 +127,8 @@ impl GeminiAdapter {
             .send()?
             .json()
             .unwrap();
+
+        println!("{:?}", raw_response);
 
         let character_list: CharacterList = serde_json::from_str(&raw_response.get_text()).unwrap();
 
