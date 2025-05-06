@@ -34,7 +34,7 @@ function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, set
 
   const handleShowSelect = (show: ShowResult) => {
     setSelectedShowId(show.id);
-    setSelectedShowName(search);
+    setSelectedShowName(show.name);
     setOpen(false);
   }
 
