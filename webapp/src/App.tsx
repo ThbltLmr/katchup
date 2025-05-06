@@ -9,6 +9,7 @@ import EpisodeDropdown from './components/EpisodeDropdown'
 import { SeasonResult } from './hooks/useGetShow'
 import CastList from './components/CastList'
 import ShowSummary from './components/ShowSummary'
+import ClearButton from './components/ClearButton'
 
 function App() {
   const queryClient = new QueryClient()
@@ -42,6 +43,9 @@ function App() {
                 <EpisodeDropdown season={selectedSeason} setSelectedEpisode={setSelectedEpisode} />
               }
             </div>
+            {!!selectedEpisode && !!selectedShowId && !!selectedSeasonNumber &&
+              <ClearButton setSelectedEpisode={setSelectedEpisode} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
+            }
             {!!selectedEpisode && !!selectedShowId && !!selectedSeasonNumber &&
               <div>
                 <CastList showId={selectedShowId} />
