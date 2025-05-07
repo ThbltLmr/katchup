@@ -9,7 +9,14 @@ import {
 import { useGetShow, SeasonResult } from "@/hooks/useGetShow";
 import React from "react";
 
-function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNumber }: { showId: number, season: SeasonResult | undefined, setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>, setSelectedSeasonNumber: React.Dispatch<number | undefined> }) {
+type Props = {
+  showId: number;
+  season: SeasonResult | undefined;
+  setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>;
+  setSelectedSeasonNumber: React.Dispatch<number | undefined>;
+}
+
+function SeasonDropdown({ showId, setSelectedSeason, season, setSelectedSeasonNumber }: Props) {
   const { data } = useGetShow(showId);
 
   const seasons = data?.ShowDetails.seasons || [];
