@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import {
   Command,
   CommandEmpty,
@@ -46,9 +46,11 @@ function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, set
     setOpen(false);
   }
 
+  const inputValue = shows?.find((show) => show.id === selectedShowId)?.name || (!!open ? search : '')
+
   return (
     <Command className={`m-4 h-full transition-all duration-300 ease-in-out ${selectedShowId > 0 ? 'w-1/2' : 'w-full'}`}>
-      <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} value={shows?.find((show) => show.id === selectedShowId)?.name || undefined} />
+      <CommandInput placeholder="Search for a show..." onValueChange={handleSearch} value={inputValue} />
       <CommandList hidden={!open}>
         <CommandEmpty>{isPending ? "Searching..." : "No results found."}</CommandEmpty>
         {!!shows && !isPending &&
