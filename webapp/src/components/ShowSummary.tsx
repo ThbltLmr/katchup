@@ -1,7 +1,13 @@
 import useGetSummary from "@/hooks/useGetSummary";
 import { Skeleton } from "./ui/skeleton";
 
-function ShowSummary({ show, season, episode }: { show: string, season: number, episode: number }) {
+type Props = {
+  show: string;
+  season: number;
+  episode: number;
+}
+
+function ShowSummary({ show, season, episode }: Props) {
   const { data, isLoading } = useGetSummary(show, season, episode);
 
   const summarySkeleton = () =>
