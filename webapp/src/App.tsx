@@ -31,8 +31,11 @@ function App() {
               <h1>Katchup</h1>
               <h1 className='text-2xl font-normal italic mt-8'>Catch up to your favorite shows with AI-generated, spoiler-free summaries</h1>
             </div>
-            <div className='text-start ms-4 my-2 text-2xl font-semibold'>
+            <div className='text-start flex flex-row ms-4 my-2 text-2xl font-semibold'>
               <h1>What do you want to catch up on?</h1>
+              {(!!selectedEpisode || !!selectedShowId || !!selectedSeasonNumber) &&
+                <ClearButton setSelectedEpisode={setSelectedEpisode} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
+              }
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
               <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedEpisode={setSelectedEpisode} />
@@ -43,9 +46,6 @@ function App() {
                 <EpisodeDropdown season={selectedSeason} setSelectedEpisode={setSelectedEpisode} />
               }
             </div>
-            {!!selectedEpisode && !!selectedShowId && !!selectedSeasonNumber &&
-              <ClearButton setSelectedEpisode={setSelectedEpisode} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
-            }
             {!!selectedEpisode && !!selectedShowId && !!selectedSeasonNumber &&
               <div>
                 <CastList showId={selectedShowId} />
