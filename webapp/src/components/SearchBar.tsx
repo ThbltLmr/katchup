@@ -10,7 +10,15 @@ import {
 import { ShowResult, useSearchShows } from "@/hooks/useSearchShows";
 import { SeasonResult } from "@/hooks/useGetShow";
 
-function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, setSelectedSeason, setSelectedEpisode }: { selectedShowId: number, setSelectedShowId: React.Dispatch<React.SetStateAction<number>>, setSelectedShowName: React.Dispatch<React.SetStateAction<string>>, setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>, setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>> }) {
+type Props = {
+  selectedShowId: number;
+  setSelectedShowId: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedShowName: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>;
+  setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>>;
+}
+
+function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, setSelectedSeason, setSelectedEpisode }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>('');
 
