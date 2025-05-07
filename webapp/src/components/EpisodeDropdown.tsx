@@ -9,7 +9,12 @@ import {
 
 import { SeasonResult } from "@/hooks/useGetShow";
 
-function EpisodeDropdown({ season, setSelectedEpisode }: { season: SeasonResult, setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>> }) {
+type Props = {
+  season: SeasonResult;
+  setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>>;
+}
+
+function EpisodeDropdown({ season, setSelectedEpisode }: Props) {
 
   const handleSelectEpisodeValue = (value: number) => {
     setSelectedEpisode(value);
