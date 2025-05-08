@@ -23,6 +23,7 @@ pub struct ShowDetailsSeason {
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct ShowDetails {
+    pub name: String,
     pub number_of_episodes: usize,
     pub number_of_seasons: usize,
     pub seasons: Vec<ShowDetailsSeason>,
