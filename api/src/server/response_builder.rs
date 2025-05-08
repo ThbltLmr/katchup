@@ -3,8 +3,6 @@ use std::collections::HashMap;
 use super::router::RouterResponse;
 
 pub struct HttpResponse {
-    code: (u16, String),
-    body: RouterResponse,
     pub format_string: String,
 }
 
@@ -21,8 +19,6 @@ impl HttpResponseBuilder {
     pub fn build_or_default_to_500(&self, code: u16, body: RouterResponse) -> HttpResponse {
         match self.http_code_map.get(&code) {
             Some(message) => HttpResponse {
-                code: (code, message.clone()),
-                body: body.clone(),
                 format_string: self.format_response((code, &message), body),
             },
 
@@ -61,8 +57,6 @@ impl HttpResponseBuilder {
         let message: String = self.http_code_map.get(&code).unwrap().to_string();
 
         HttpResponse {
-            code: (code, message.clone()),
-            body: RouterResponse::None,
             format_string: self.format_response((code, &message), RouterResponse::None),
         }
     }
@@ -80,8 +74,6 @@ mod tests {
 
         let response = response_builder.build_500();
 
-        assert_eq!(response.code.0, 500);
-        assert_eq!(response.code.1, "Internal Server Error");
         assert_eq!(response.format_string, "HTTP/1.1 500 Internal Server Error\r\ncontent-type: application/json\r\ncontent-length: 6\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n\"None\"");
     }
 
