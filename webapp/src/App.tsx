@@ -49,7 +49,7 @@ function App() {
             {!!selectedEpisode && !!selectedShowId && !!selectedSeasonNumber &&
               <div>
                 <CastList showId={selectedShowId} />
-                <ShowSummary show={selectedShowName} season={selectedSeasonNumber} episode={selectedEpisode} />
+                <ShowSummary showId={selectedShowId} season={selectedSeasonNumber} episode={selectedEpisode} />
               </div>
             }
           </div>

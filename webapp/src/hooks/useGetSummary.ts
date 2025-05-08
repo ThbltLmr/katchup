@@ -17,11 +17,11 @@ const getSummary = async (show: string, season: number, episode: number): Promis
 		.catch((e) => { throw new Error(e) });
 };
 
-const useGetSummary = (show: string, season: number, episode: number) =>
+const useGetSummary = (showId: number, season: number, episode: number) =>
 	useQuery({
-		queryKey: ["summary", show, season, episode],
-		queryFn: () => getSummary(show, season, episode),
-		enabled: !!show,
+		queryKey: ["summary", showId, season, episode],
+		queryFn: () => getSummary(showId.toString(), season, episode),
+		enabled: !!showId,
 		retry: false,
 	});
 
