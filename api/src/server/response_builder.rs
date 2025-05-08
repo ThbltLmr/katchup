@@ -38,17 +38,26 @@ impl HttpResponseBuilder {
     }
 
     fn format_response(&self, code: (u16, &str), body: RouterResponse) -> String {
-        match serde_json::to_string(&body) {
-            Ok(formatted_body) => {
+        match body {
+            RouterResponse::None => {
                 format!(
+                    "HTTP/1.1 {} {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n",
+                    code.0,
+                    code.1,
+                )
+            }
+            _ => match serde_json::to_string(&body) {
+                Ok(formatted_body) => {
+                    format!(
                     "HTTP/1.1 {} {}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n{}",
                     code.0,
                     code.1,
                     formatted_body.len(),
                     formatted_body,
                 )
-            }
-            Err(_) => "Failed to serialize response body".to_string(),
+                }
+                Err(_) => "Failed to serialize response body".to_string(),
+            },
         }
     }
 
@@ -74,7 +83,7 @@ mod tests {
 
         let response = response_builder.build_500();
 
-        assert_eq!(response.format_string, "HTTP/1.1 500 Internal Server Error\r\ncontent-type: application/json\r\ncontent-length: 6\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n\"None\"");
+        assert_eq!(response.format_string, "HTTP/1.1 500 Internal Server Error\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:5173\r\n\r\n");
     }
 
     #[test]
