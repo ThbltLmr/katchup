@@ -50,6 +50,11 @@ pub struct CastDetails {
     pub cast: Vec<CastMember>,
 }
 
+#[derive(Clone, Deserialize, Serialize)]
+pub struct EpisodeDetails {
+    pub overview: String,
+}
+
 pub struct TmdbAdapter {
     client: Client,
 }
@@ -133,6 +138,33 @@ impl TmdbAdapter {
         println!("TMDB response: {response:#?}");
 
         let details: CastDetails = response.json().expect("Could not format json");
+        Ok(details)
+    }
+
+    pub fn get_episode_details(
+        &self,
+        show_id: usize,
+        season_number: usize,
+        episode_number: usize,
+    ) -> Result<EpisodeDetails, Box<dyn Error>> {
+        let request_url = format!(
+            "https://api.themoviedb.org/3/tv/{}/season/{}/episode/{}",
+            show_id, season_number, episode_number
+        );
+
+        let api_token = std::env::var("TMDB_API_TOKEN").unwrap();
+
+        let builder = self
+            .client
+            .request(Method::GET, request_url)
+            .bearer_auth(api_token)
+            .header(ACCEPT, "application/json");
+
+        let response = builder.send()?;
+
+        println!("TMDB response: {response:#?}");
+
+        let details: EpisodeDetails = response.json().expect("Could not format json");
         Ok(details)
     }
 }
