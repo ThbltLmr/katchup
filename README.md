@@ -20,7 +20,7 @@ This directory contains the services needed to build the server, parse incoming 
 
 #### Adapters
 This directory contains the services used to make external API calls. It uses the reqwest and serde crates for HTTP requests and JSON serialization respectively.
-- tmdb_adapter.rs: Handles communication with The Movie Database (TMDB) API to search for shows, get show details (seasons, episode count), and fetch aggregated cast credits (used to get list of cast and characters).
+- tmdb_adapter.rs: Handles communication with The Movie Database (TMDB) API to search for shows, get show details (seasons, episode count), get episode overviews (used as a starting point for the LLM), and fetch aggregated cast credits (used to get list of cast and characters).
 - gemini_adapter.rs: Uses the Google Gemini API to generate summaries of shows up to a specific point and to provide descriptions for lists of characters.
 - ollama_adapter.rs (deprecated): Similar to the gemini_adapter.rs file, but using a local Ollama server with llama3.2. Deprecated as performance and quality was much lower than Gemini.
 
