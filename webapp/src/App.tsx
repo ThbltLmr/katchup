@@ -14,7 +14,6 @@ import ClearButton from './components/ClearButton'
 function App() {
   const queryClient = new QueryClient()
   const [selectedShowId, setSelectedShowId] = useState(0);
-  const [selectedShowName, setSelectedShowName] = useState('');
   const [selectedSeason, setSelectedSeason] = useState<SeasonResult | undefined>(undefined);
   const [selectedSeasonNumber, setSelectedSeasonNumber] = useState<number | undefined>(undefined);
   const [selectedEpisode, setSelectedEpisode] = useState<number | undefined>(undefined);
@@ -34,11 +33,11 @@ function App() {
             <div className='text-start flex flex-row ms-4 my-2 text-2xl font-semibold'>
               <h1>What do you want to catch up on?</h1>
               {(!!selectedEpisode || !!selectedShowId || !!selectedSeasonNumber) &&
-                <ClearButton setSelectedEpisode={setSelectedEpisode} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
+                <ClearButton setSelectedEpisode={setSelectedEpisode} setSelectedShowId={setSelectedShowId} setSelectedSeason={setSelectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
               }
             </div>
             <div className='flex transition-all duration-300 ease-in-out'>
-              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedShowName={setSelectedShowName} setSelectedSeason={setSelectedSeason} setSelectedEpisode={setSelectedEpisode} />
+              <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedSeason={setSelectedSeason} setSelectedEpisode={setSelectedEpisode} />
               {selectedShowId > 0 &&
                 <SeasonDropdown showId={selectedShowId} setSelectedSeason={setSelectedSeason} season={selectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
               }

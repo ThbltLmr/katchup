@@ -5,16 +5,14 @@ import { X } from 'lucide-react';
 
 type Props = {
   setSelectedShowId: Dispatch<SetStateAction<number>>;
-  setSelectedShowName: Dispatch<SetStateAction<string>>;
   setSelectedSeason: Dispatch<SetStateAction<SeasonResult | undefined>>;
   setSelectedSeasonNumber: Dispatch<SetStateAction<number | undefined>>;
   setSelectedEpisode: Dispatch<SetStateAction<number | undefined>>;
 }
 
-function ClearButton({ setSelectedSeason, setSelectedSeasonNumber, setSelectedShowId, setSelectedEpisode, setSelectedShowName }: Props) {
+function ClearButton({ setSelectedSeason, setSelectedSeasonNumber, setSelectedShowId, setSelectedEpisode }: Props) {
   const handleReset = () => {
     setSelectedShowId(0)
-    setSelectedShowName('')
     setSelectedSeason(undefined)
     setSelectedSeasonNumber(undefined)
     setSelectedEpisode(undefined)

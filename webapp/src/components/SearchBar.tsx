@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import {
   Command,
   CommandEmpty,
@@ -13,12 +13,11 @@ import { SeasonResult } from "@/hooks/useGetShow";
 type Props = {
   selectedShowId: number;
   setSelectedShowId: React.Dispatch<React.SetStateAction<number>>;
-  setSelectedShowName: React.Dispatch<React.SetStateAction<string>>;
   setSelectedSeason: React.Dispatch<React.SetStateAction<SeasonResult | undefined>>;
   setSelectedEpisode: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
-function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, setSelectedSeason, setSelectedEpisode }: Props) {
+function SearchBar({ selectedShowId, setSelectedShowId, setSelectedSeason, setSelectedEpisode }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState<string>('');
 
@@ -42,7 +41,6 @@ function SearchBar({ selectedShowId, setSelectedShowId, setSelectedShowName, set
 
   const handleShowSelect = (show: ShowResult) => {
     setSelectedShowId(show.id);
-    setSelectedShowName(show.name);
     setOpen(false);
   }
 
