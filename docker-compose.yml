@@ -15,6 +15,16 @@ services:
       - app-network
     restart: unless-stopped
 
+  webapp:
+    build:
+      context: ./webapp
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
