@@ -10,6 +10,7 @@ import { SeasonResult } from './hooks/useGetShow'
 import CastList from './components/CastList'
 import ShowSummary from './components/ShowSummary'
 import ClearButton from './components/ClearButton'
+import UsageInfo from './components/UsageInfo'
 
 function App() {
   const queryClient = new QueryClient()
@@ -36,6 +37,7 @@ function App() {
                 <ClearButton setSelectedEpisode={setSelectedEpisode} setSelectedShowId={setSelectedShowId} setSelectedSeason={setSelectedSeason} setSelectedSeasonNumber={setSelectedSeasonNumber} />
               }
             </div>
+            <UsageInfo />
             <div className='flex transition-all duration-300 ease-in-out'>
               <SearchBar selectedShowId={selectedShowId} setSelectedShowId={setSelectedShowId} setSelectedSeason={setSelectedSeason} setSelectedEpisode={setSelectedEpisode} />
               {selectedShowId > 0 &&
