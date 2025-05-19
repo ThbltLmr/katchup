@@ -10,6 +10,9 @@ Katchup allows you to cherry-pick the season and episode you're about to start, 
 - Get a summary of all previous episodes, as well as reminders of key characters, powered by Gemini 2.5
 
 ## Project structure
+
+![image](https://github.com/user-attachments/assets/c0088906-2d47-4c01-a569-761c7e5feef6)
+
 ### API - Implementation of thread-pool server and adapters for external services in Rust
 #### Server
 This directory contains the services needed to build the server, parse incoming requests, and respond to them. Incoming requests are currently handled synchronously, without an async runtime.
