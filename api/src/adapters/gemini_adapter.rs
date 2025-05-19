@@ -110,7 +110,15 @@ impl GeminiAdapter {
 
         println!("{:?}", response);
 
-        Ok(response.get_text())
+        Ok(format!(
+            "Here is a summary of {} up to S{}E{} inclusive, so you can be ready to watch S{}E{}: \n\n{}",
+            show.name,
+            prompt_season,
+            prompt_episode,
+            season,
+            episode,
+            response.get_text()
+        ))
     }
 
     pub fn describe_cast(

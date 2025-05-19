@@ -91,6 +91,7 @@ mod tests {
         let response_builder = HttpResponseBuilder::new();
         let code = (200, "OK");
         let body = RouterResponse::ShowDetails(ShowDetails {
+            name: "Test".into(),
             number_of_episodes: 2,
             number_of_seasons: 1,
             seasons: vec![ShowDetailsSeason {

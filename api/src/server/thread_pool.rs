@@ -1,7 +1,7 @@
 use std::{
     sync::{
+        mpsc::{channel, Receiver, Sender},
         Arc, Mutex,
-        mpsc::{Receiver, Sender, channel},
     },
     thread::{Builder, JoinHandle},
 };
@@ -20,6 +20,7 @@ pub enum PoolCreationError {
     Error,
 }
 
+// Flag: implementation based on Rust Book: https://doc.rust-lang.org/book/ch21-00-final-project-a-web-server.html
 impl ThreadPool {
     pub fn execute<F>(&self, f: F)
     where
@@ -57,16 +58,14 @@ struct Worker {
 
 impl Worker {
     fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Result<Worker, PoolCreationError> {
-        match Builder::new().spawn(move || {
-            loop {
-                let job = receiver
-                    .lock()
-                    .expect("Failed to acquire mutex lock!")
-                    .recv()
-                    .expect("Channel sender has stopped");
+        match Builder::new().spawn(move || loop {
+            let job = receiver
+                .lock()
+                .expect("Failed to acquire mutex lock!")
+                .recv()
+                .expect("Channel sender has stopped");
 
-                job();
-            }
+            job();
         }) {
             Ok(thread) => Ok(Worker { id, thread }),
             Err(_) => Err(PoolCreationError::Error),

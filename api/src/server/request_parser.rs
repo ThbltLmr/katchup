@@ -22,6 +22,7 @@ pub enum ParseRequestError {
 }
 
 impl RequestParser {
+    // Flag: LLM-usage to generate this method
     pub fn parse_request(request_string: String) -> Result<Request, ParseRequestError> {
         let mut lines = request_string.lines();
 
