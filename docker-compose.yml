@@ -5,7 +5,7 @@ services:
       dockerfile: api/Dockerfile
     image: katchup-backend
     ports:
-      - "127.0.0.1:8000:8000"
+      - "8000:8000"
     environment:
       - RUST_LOG=info
       - RUST_BACKTRACE=full
@@ -19,7 +19,7 @@ services:
     build:
       context: ./webapp
     ports:
-      - "127.0.0.1:4322:80"
+      - "4322:80"
     depends_on:
       - backend
     networks:
