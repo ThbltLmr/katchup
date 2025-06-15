@@ -41,7 +41,7 @@ impl HttpResponseBuilder {
         match body {
             RouterResponse::None => {
                 format!(
-                    "HTTP/1.1 {} {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:4322\r\n\r\n",
+                    "HTTP/1.1 {} {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: *\r\n\r\n",
                     code.0,
                     code.1,
                 )
@@ -49,7 +49,7 @@ impl HttpResponseBuilder {
             _ => match serde_json::to_string(&body) {
                 Ok(formatted_body) => {
                     format!(
-                    "HTTP/1.1 {} {}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: http://localhost:4322\r\n\r\n{}",
+                    "HTTP/1.1 {} {}\r\ncontent-type: application/json\r\ncontent-length: {}\r\nAccess-Control-Allow-Headers: *\r\nAccess-Control-Allow-Methods: *\r\norigin: *\r\nAccess-Control-Allow-Origin: *\r\n\r\n{}",
                     code.0,
                     code.1,
                     formatted_body.len(),
