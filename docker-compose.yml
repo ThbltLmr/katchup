@@ -19,7 +19,7 @@ services:
     build:
       context: ./webapp
     ports:
-      - "127.0.0.1:3000:80"
+      - "127.0.0.1:4322:80"
     depends_on:
       - backend
     networks:
